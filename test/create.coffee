@@ -19,7 +19,10 @@ describe 'Migrator', ->
     migrator.create dir, 'test1', (err, res) ->
       return done(err) if err
       fs.existsSync(path.join dir, '1-test1.js').should.be.ok
-      done()
+      migrator.create dir, 'test2', (err, res) ->
+        return done(err) if err
+        fs.existsSync(path.join dir, '2-test2.js').should.be.ok
+        done()
 
   it 'should create migration stubs for Coffee', (done) ->
 
