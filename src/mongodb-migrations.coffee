@@ -121,6 +121,32 @@ class Migrator
       return done new Error('Rollback can only be ran after migrate')
     @_runWhenReady 'down', done, progress
 
+  _loadMigrationFiles: (dir, cb) ->
+    fs = require 'fs'
+    path = require 'path'
+    fs.readdir dir, (err, files) ->
+      if err
+        return cb err
+      files = files
+        .map (f) ->
+          n = f.match(/^(\d+)/)?[1]
+          if n
+            n = parseInt n, 10
+          else n = null
+          [n, f]
+        .filter (f) -> !!f[0]
+        .sort (f1, f2) -> f1[0] - f2[0]
+        .map (f) ->
+          require path.join dir, f[1]
+      cb null, files
+
+  runFromDir: (dir, done, progress) ->
+    @_loadMigrationFiles dir, (err, files) =>
+      if err
+        return done err
+      @bulkAdd files
+      @migrate done, progress
+
   create: (id, cb) ->
 
 module.exports.Migrator = Migrator
