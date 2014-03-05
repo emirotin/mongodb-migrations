@@ -26,7 +26,8 @@
   "dependencies": {
     "lodash": "^2.4.1",
     "mongo-pool2": "^0.0.6",
-    "q": "^1.0.0"
+    "q": "^1.0.0",
+    "nomnom": "^1.6.2"
   },
   "devDependencies": {
     "coffee-script": "~1.7.0",

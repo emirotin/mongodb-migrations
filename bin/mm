@@ -1,0 +1,84 @@
+#!/usr/bin/env node
+
+var mm = require('..'),
+  Migrator = mm.Migrator,
+  fs = require('fs'),
+  path = require('path'),
+  optparser = require('nomnom'),
+  _ = require('lodash'),
+  config,
+  defaults = {
+    directory: "migrations"
+  },
+  dir = process.cwd();
+
+optparser
+  .script('mm')
+  .option('config', {
+    default: 'mm-config.json',
+    metavar: 'FILE',
+    help: 'The name of the file in the current directory, can be .js, or .json, or .coffee'
+  });
+
+optparser
+  .command('migrate')
+  .callback(runMigrations);
+
+optparser
+  .nocommand()
+  .callback(runMigrations);
+
+optparser
+  .command('create')
+  .option('coffee', {
+    abbr: 'c',
+    flag: true,
+    help: 'Generate migration stub in CoffeeScript'
+  })
+  .callback(createMigration);
+
+
+optparser.parse();
+
+function runMigrations(opts) {
+  readConfig(opts.config);
+  createMigrator().runFromDir(path.join(dir, config.directory), exit);
+}
+
+function exit(err) {
+  if (err) {
+    console.error("Error: " + err);
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+
+function createMigration(opts) {
+  readConfig(opts.config);
+  var id = opts._.slice(1).join(' ');
+  if (!id) {
+    exit("Migration ID is required");
+  }
+  createMigrator().create(path.join(dir, config.directory), id, exit, opts.coffee);
+}
+
+function readConfig(fileName) {
+  if (config) {
+    return;
+  }
+  try {
+    fileName = path.join(dir, fileName);
+    if (fileName.match(/\.coffee$/)) {
+      require('coffee-script/register');
+    }
+    config = _.extend({}, defaults, require(fileName));
+  }
+  catch (e) {
+    exit(fileName + "cannot be imported");
+  }
+}
+
+function createMigrator() {
+  return new Migrator(config.db);
+}
