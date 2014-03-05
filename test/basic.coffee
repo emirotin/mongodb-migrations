@@ -24,9 +24,12 @@ describe 'Migrator', ->
         up: (cb) ->
           coll.insert name: 'tobi', cb
       migrator.migrate (err, res) ->
-        (!err).should.be.ok
+        return done(err) if err
         res.should.be.ok
         res[0].id.should.be.equal 1
         res[0].result.status.should.be.equal 'ok'
-        done()
+        coll.find({name: 'tobi'}).count (err, count) ->
+          return done(err) if err
+          count.should.be.equal 1
+          done()
 
