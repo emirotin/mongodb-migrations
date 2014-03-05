@@ -137,14 +137,14 @@ class Migrator
         .filter (f) -> !!f[0]
         .sort (f1, f2) -> f1[0] - f2[0]
         .map (f) ->
-          require path.join dir, f[1]
+          [f[0], require path.join dir, f[1]]
       cb null, files
 
   runFromDir: (dir, done, progress) ->
     @_loadMigrationFiles dir, (err, files) =>
       if err
         return done err
-      @bulkAdd files
+      @bulkAdd files.map (f) -> f[1]
       @migrate done, progress
 
   create: (id, cb) ->
