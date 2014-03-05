@@ -1,3 +1,5 @@
+fs = require 'fs'
+path = require 'path'
 Q = require 'q'
 _ = require 'lodash'
 mongoPool = require 'mongo-pool2'
@@ -122,8 +124,6 @@ class Migrator
     @_runWhenReady 'down', done, progress
 
   _loadMigrationFiles: (dir, cb) ->
-    fs = require 'fs'
-    path = require 'path'
     fs.readdir dir, (err, files) ->
       if err
         return cb err
@@ -147,6 +147,41 @@ class Migrator
       @bulkAdd files.map (f) -> f[1]
       @migrate done, progress
 
-  create: (id, cb) ->
+  create: (dir, id, done, coffeeScript=false) ->
+    @_loadMigrationFiles dir, (err, files) =>
+      if err
+        return done err
+      maxNum = _.max files.map (f) -> f[0]
+      nextNum = Math.max(maxNum, 0) + 1
+      slug = (id or '').toLowerCase().replace /\s+/, '-'
+      ext = if coffeeScript then 'coffee' else 'js'
+      fileName = path.join dir, "#{nextNum}-#{slug}.#{ext}"
+      if coffeeScript
+        body = """
+          module.exports.id = "#{id}"
+
+          module.exports.up = (done) ->
+            # use @db for MongoDB communication, and @log() for logging
+            done()
+
+          module.exports.down = (done) ->
+            # use @db for MongoDB communication, and @log() for logging
+            done()
+        """
+      else
+        body = """
+          module.exports.id = "#{id}";
+
+          module.exports.up = function (done) {
+            // use this.db for MongoDB communication, and this.log() for logging
+            done();
+          };
+
+          module.exports.down = function (done) {
+            // use this.db for MongoDB communication, and this.log() for logging
+            done();
+          };
+        """
+      fs.writeFile fileName, body, done
 
 module.exports.Migrator = Migrator
