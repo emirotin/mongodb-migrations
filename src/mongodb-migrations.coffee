@@ -5,7 +5,7 @@ mongoPool = require 'mongo-pool2'
 class Migrator
   constructor: (dbConfig) ->
     @_m = []
-    @_result = []
+    @_result = {}
     deferred = Q.defer()
     @_dbReady = deferred.promise
     mongoPool.create dbConfig, (err, pool) =>
@@ -49,13 +49,14 @@ class Migrator
         .value()
     else
       direction = 'up'
-      @_result = []
+      @_result = {}
       m = @_m
     @_lastDirection = direction
 
     log = (depth) ->
+      tab = Array(depth).join(' ')
       ->
-        args = [ Array(depth).join(' ') ].concat arguments
+        args = [ tab ].concat arguments
         console.log.apply console, args
     userLog = log(6)
     systemLog = log(4)
@@ -76,7 +77,7 @@ class Migrator
       i += 1
 
       migrationDone = (res) =>
-        @_result.push { id: migration.id, result: res }
+        @_result[migration.id] = res
         _.defer ->
           progress?(migration.id, res)
         systemLog 'Migration', migration.id, res.status
@@ -94,7 +95,10 @@ class Migrator
       fn = migration[direction]
       id = migration.id
 
-      if id of @_ranMigrations or not fn
+      if (not fn \
+        or (direction == 'up' and id of @_ranMigrations) \
+        or (direction == 'down' and id not of @_result)
+      )
         migrationDone status: 'skip'
         return runOne()
 

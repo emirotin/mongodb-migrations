@@ -1,0 +1,1 @@
+0.0.1 Initial release, has tests, allows migration and rollback, only programmatic API
