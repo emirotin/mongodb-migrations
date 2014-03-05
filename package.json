@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/emirotin/mongodb-migrations",
   "dependencies": {
-    "lodash": "~2.4.1",
+    "lodash": "^2.4.1",
     "async": "~0.2.9",
     "mongo-pool2": "^0.0.6",
     "q": "^1.0.0"
