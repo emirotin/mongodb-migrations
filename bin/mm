@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 (function() {
-  var Migrator, createMigration, createMigrator, cwd, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations, _;
+  var Migrator, config, createMigration, createMigrator, cwd, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations, _;
 
   fs = require('fs');
 
@@ -20,6 +20,8 @@
   };
 
   dir = process.cwd();
+
+  config = null;
 
   optparser.script('mm').option('config', {
     "default": 'mm-config.json',
@@ -40,7 +42,7 @@
   optparser.parse();
 
   readConfig = function(fileName) {
-    var config, e;
+    var e;
     if (config) {
       return;
     }
