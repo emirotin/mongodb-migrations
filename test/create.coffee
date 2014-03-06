@@ -11,8 +11,7 @@ describe 'Migrator', ->
   beforeEach (done) ->
     testsCommon.beforeEach (res) ->
       {migrator} = res
-      rimraf dir, ->
-        fs.mkdir dir, done
+      rimraf dir, done
 
   it 'should create migration stubs for JS', (done) ->
 

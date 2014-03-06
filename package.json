@@ -6,8 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register -r should"
   },
-  "bin" : {
-    "mm" : "./bin/mm"
+  "bin": {
+    "mm": "./bin/mm"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,8 @@
     "lodash": "^2.4.1",
     "mongo-pool2": "^0.0.6",
     "q": "^1.0.0",
-    "nomnom": "^1.6.2"
+    "nomnom": "^1.6.2",
+    "mkdirp": "^0.3.5"
   },
   "devDependencies": {
     "coffee-script": "~1.7.0",

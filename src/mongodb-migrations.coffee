@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 Q = require 'q'
 _ = require 'lodash'
+mkdirp = require 'mkdirp'
 mongoPool = require 'mongo-pool2'
 
 class Migrator
@@ -138,24 +139,27 @@ class Migrator
     @_runWhenReady 'down', done, progress
 
   _loadMigrationFiles: (dir, cb) ->
-    fs.readdir dir, (err, files) ->
+    mkdirp dir, 0o0774, (err) ->
       if err
         return cb err
-      files = files
-        .map (f) ->
-          n = f.match(/^(\d+)/)?[1]
-          if n
-            n = parseInt n, 10
-          else n = null
-          [n, f]
-        .filter (f) -> !!f[0]
-        .sort (f1, f2) -> f1[0] - f2[0]
-        .map (f) ->
-          fileName = path.join dir, f[1]
-          if fileName.match /\.coffee$/
-            require('coffee-script/register')
-          [f[0], require fileName]
-      cb null, files
+      fs.readdir dir, (err, files) ->
+        if err
+          return cb err
+        files = files
+          .map (f) ->
+            n = f.match(/^(\d+)/)?[1]
+            if n
+              n = parseInt n, 10
+            else n = null
+            [n, f]
+          .filter (f) -> !!f[0]
+          .sort (f1, f2) -> f1[0] - f2[0]
+          .map (f) ->
+            fileName = path.join dir, f[1]
+            if fileName.match /\.coffee$/
+              require('coffee-script/register')
+            [f[0], require fileName]
+        cb null, files
 
   runFromDir: (dir, done, progress) ->
     @_loadMigrationFiles dir, (err, files) =>
