@@ -22,10 +22,9 @@ class Migrator
       @log = logFn
     else
       util = require('util')
-      @log = (opts) ->
-        {src, data} = opts
+      @log = (src, msg) ->
         pad = Array(if src == 'system' then 6 else 4).join(' ')
-        console.log pad + (util.inspect(d) for d in data).join ' '
+        console.log pad + msg
 
   add: (m) ->
     # m must be an { id, up, down } object
@@ -66,8 +65,8 @@ class Migrator
 
     logFn = @log
     log = (src) ->
-      ->
-        logFn?({ src, data: Array::slice.call arguments })
+      (msg) ->
+        logFn?(src, msg)
     userLog = log('user')
     systemLog = log('system')
 
@@ -90,9 +89,9 @@ class Migrator
         @_result[migration.id] = res
         _.defer ->
           progress?(migration.id, res)
-        systemLog 'Migration', migration.id, res.status
+        systemLog "Migration '#{migration.id}': #{res.status}"
         if res.status == 'error'
-          systemLog '  ', res.error
+          systemLog '  ' + res.error
         if res.status == 'ok'
           deferred = Q.defer()
           insertPromises.push deferred.promise
