@@ -89,7 +89,10 @@ class Migrator
         @_result[migration.id] = res
         _.defer ->
           progress?(migration.id, res)
-        systemLog "Migration '#{migration.id}': #{res.status}"
+        msg = "Migration '#{migration.id}': #{res.status}"
+        if res.status == 'skip'
+          msg += " (#{res.reason})"
+        systemLog msg
         if res.status == 'error'
           systemLog '  ' + res.error
         if res.status == 'ok'
@@ -104,11 +107,15 @@ class Migrator
       fn = migration[direction]
       id = migration.id
 
-      if (not fn \
-        or (direction == 'up' and id of @_ranMigrations) \
-        or (direction == 'down' and id not of @_result)
-      )
-        migrationDone status: 'skip'
+      skipReason = null
+      if not fn
+        skipReason = "no migration function for direction #{direction}"
+      if direction == 'up' and id of @_ranMigrations
+        skipReason = "migration already ran"
+      if direction == 'down' and id not of @_result
+        skipReason = "migration wasn't in the resent `migrate` run"
+      if skipReason
+        migrationDone status: 'skip', reason: skipReason
         return runOne()
 
       context = { db: @_pool.acquire(), log: userLog }

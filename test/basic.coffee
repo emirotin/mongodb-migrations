@@ -52,3 +52,19 @@ describe 'Migrator', ->
             count.should.be.equal 1
             done()
 
+  it 'should skip on consequent runs', (done) ->
+    migrator.add
+      id: 1
+      up: (cb) ->
+        coll.insert name: 'tobi', cb
+      down: (cb) ->
+        coll.update { name: 'tobi' }, { name: 'loki' }, cb
+    migrator.migrate (err, res) ->
+      return done(err) if err
+      res['1'].should.be.ok
+      res['1'].status.should.be.equal 'ok'
+      migrator.migrate (err, res) ->
+        return done(err) if err
+        res['1'].should.be.ok
+        res['1'].status.should.be.equal 'skip'
+        done()
