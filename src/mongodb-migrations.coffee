@@ -115,7 +115,7 @@ class Migrator
       if direction == 'up' and id of @_ranMigrations
         skipReason = "migration already ran"
       if direction == 'down' and id not of @_result
-        skipReason = "migration wasn't in the resent `migrate` run"
+        skipReason = "migration wasn't in the recent `migrate` run"
       if skipReason
         migrationDone status: 'skip', reason: skipReason
         return runOne()
