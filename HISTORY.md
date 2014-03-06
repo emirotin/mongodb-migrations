@@ -1,4 +1,5 @@
-0.0.5 Binary bugfix
+0.0.7 Report exact skip reason
+0.0.6 Binary bugfix
 0.0.5 Binary bugfix
 0.0.4 Binary file for creating and running migrations
 0.0.3 Allow creating migration stubs
