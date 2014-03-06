@@ -23,24 +23,6 @@
 
   config = null;
 
-  optparser.script('mm').option('config', {
-    "default": 'mm-config.json',
-    metavar: 'FILE',
-    help: "The name of the file in the current directory, can be .js, or .json, or .coffee.\nFor .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory."
-  });
-
-  optparser.command('migrate').callback(runMigrations);
-
-  optparser.nocommand().callback(runMigrations);
-
-  optparser.command('create').option('coffee', {
-    abbr: 'c',
-    flag: true,
-    help: 'Generate migration stub in CoffeeScript'
-  }).callback(createMigration);
-
-  optparser.parse();
-
   readConfig = function(fileName) {
     var e;
     if (config) {
@@ -88,5 +70,23 @@
     }
     return process.exit(0);
   };
+
+  optparser.script('mm').option('config', {
+    "default": 'mm-config.json',
+    metavar: 'FILE',
+    help: "The name of the file in the current directory, can be .js, or .json, or .coffee.\nFor .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory."
+  });
+
+  optparser.command('migrate').callback(runMigrations);
+
+  optparser.nocommand().callback(runMigrations);
+
+  optparser.command('create').option('coffee', {
+    abbr: 'c',
+    flag: true,
+    help: 'Generate migration stub in CoffeeScript'
+  }).callback(createMigration);
+
+  optparser.parse();
 
 }).call(this);

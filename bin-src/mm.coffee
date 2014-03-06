@@ -15,34 +15,6 @@ dir = process.cwd()
 
 config = null
 
-optparser
-  .script 'mm'
-  .option 'config',
-    default: 'mm-config.json'
-    metavar: 'FILE'
-    help: """
-      The name of the file in the current directory, can be .js, or .json, or .coffee.
-      For .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory.
-    """
-
-optparser
-  .command 'migrate'
-  .callback runMigrations
-
-optparser
-  .nocommand()
-  .callback runMigrations
-
-optparser
-  .command 'create'
-  .option 'coffee',
-    abbr: 'c'
-    flag: true
-    help: 'Generate migration stub in CoffeeScript'
-  .callback createMigration
-
-optparser.parse()
-
 readConfig = (fileName) ->
   if config
     return
@@ -77,3 +49,31 @@ exit = (err) ->
     console.error "Error: " + err
     process.exit 1
   process.exit 0
+
+optparser
+  .script 'mm'
+  .option 'config',
+    default: 'mm-config.json'
+    metavar: 'FILE'
+    help: """
+      The name of the file in the current directory, can be .js, or .json, or .coffee.
+      For .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory.
+    """
+
+optparser
+  .command 'migrate'
+  .callback runMigrations
+
+optparser
+  .nocommand()
+  .callback runMigrations
+
+optparser
+  .command 'create'
+  .option 'coffee',
+    abbr: 'c'
+    flag: true
+    help: 'Generate migration stub in CoffeeScript'
+  .callback createMigration
+
+optparser.parse()
