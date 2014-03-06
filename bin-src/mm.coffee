@@ -13,6 +13,8 @@ defaults =
 
 dir = process.cwd()
 
+config = null
+
 optparser
   .script 'mm'
   .option 'config',

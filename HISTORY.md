@@ -1,3 +1,4 @@
+0.0.5 Bugfix
 0.0.4 Binary file for creating and running migrations
 0.0.3 Allow creating migration stubs
 0.0.2 Allow running migrations from directory
