@@ -1,3 +1,4 @@
+0.0.8 Fix for the case when migrations directory does not exist
 0.0.7 Report exact skip reason
 0.0.6 Binary bugfix
 0.0.5 Binary bugfix
