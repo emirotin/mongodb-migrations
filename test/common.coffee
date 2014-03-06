@@ -16,5 +16,5 @@ module.exports =
       if err
         return done err
       db.collection(config.collection).remove {}, ->
-        migrator = new mm.Migrator config
+        migrator = new mm.Migrator config, null
         done { migrator, db }

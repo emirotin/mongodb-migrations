@@ -5,7 +5,7 @@ _ = require 'lodash'
 mongoPool = require 'mongo-pool2'
 
 class Migrator
-  constructor: (dbConfig) ->
+  constructor: (dbConfig, logFn) ->
     @_m = []
     @_result = {}
     deferred = Q.defer()
@@ -17,6 +17,15 @@ class Migrator
         @_pool = pool
         deferred.resolve()
     @_collName = dbConfig.collection
+
+    if logFn or logFn == null
+      @log = logFn
+    else
+      util = require('util')
+      @log = (opts) ->
+        {src, data} = opts
+        pad = Array(if src == 'system' then 6 else 4).join(' ')
+        console.log pad + (util.inspect(d) for d in data).join ' '
 
   add: (m) ->
     # m must be an { id, up, down } object
@@ -55,13 +64,12 @@ class Migrator
       m = @_m
     @_lastDirection = direction
 
-    log = (depth) ->
-      tab = Array(depth).join(' ')
+    logFn = @log
+    log = (src) ->
       ->
-        args = [ tab ].concat arguments
-        console.log.apply console, args
-    userLog = log(6)
-    systemLog = log(4)
+        logFn?({ src, data: Array::slice.call arguments })
+    userLog = log('user')
+    systemLog = log('system')
 
     insertPromises = []
 
@@ -151,7 +159,7 @@ class Migrator
       @migrate done, progress
 
   create: (dir, id, done, coffeeScript=false) ->
-    @_loadMigrationFiles dir, (err, files) =>
+    @_loadMigrationFiles dir, (err, files) ->
       if err
         return done err
       maxNum = _.max files.map (f) -> f[0]
