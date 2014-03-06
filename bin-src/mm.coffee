@@ -1,0 +1,77 @@
+# A CLI utility for mongodb-migrations
+
+fs = require('fs')
+path = require('path')
+optparser = require('nomnom')
+_ = require('lodash')
+
+mm = require('..')
+Migrator = mm.Migrator
+
+defaults =
+  directory: "migrations"
+
+dir = process.cwd()
+
+optparser
+  .script 'mm'
+  .option 'config',
+    default: 'mm-config.json'
+    metavar: 'FILE'
+    help: """
+      The name of the file in the current directory, can be .js, or .json, or .coffee.
+      For .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory.
+    """
+
+optparser
+  .command 'migrate'
+  .callback runMigrations
+
+optparser
+  .nocommand()
+  .callback runMigrations
+
+optparser
+  .command 'create'
+  .option 'coffee',
+    abbr: 'c'
+    flag: true
+    help: 'Generate migration stub in CoffeeScript'
+  .callback createMigration
+
+optparser.parse()
+
+readConfig = (fileName) ->
+  if config
+    return
+
+  try
+    fileName = path.join dir, fileName
+    if  fileName.match /\.coffee$/
+      require('coffee-script/register')
+    config = _.extend {}, defaults, require(fileName)
+  catch e
+    exit fileName + " cannot be imported"
+
+cwd = ->
+  path.join dir, config.directory
+
+createMigrator = ->
+  new Migrator config.db
+
+runMigrations = (opts) ->
+  readConfig opts.config
+  createMigrator().runFromDir cwd(), exit
+
+createMigration = (opts) ->
+  readConfig opts.config
+  id = opts._[1..].join ' '
+  if not id
+    exit "Migration ID is required"
+  createMigrator().create cwd(), id, exit, opts.coffee
+
+exit = (err) ->
+  if err
+    console.error "Error: " + err
+    process.exit 1
+  process.exit 0
