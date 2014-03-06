@@ -1,10 +1,13 @@
 {
   "name": "mongodb-migrations",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A migration framework for MongoDB",
   "main": "lib/mongodb-migrations.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register -r should"
+  },
+  "bin" : {
+    "mm" : "./bin/mm"
   },
   "repository": {
     "type": "git",
