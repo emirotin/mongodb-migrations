@@ -24,6 +24,7 @@ class Migrator
     else
       util = require('util')
       @log = (src, msg) ->
+        # TODO: console.error.bind(console, 'connection error:')
         pad = Array(if src == 'system' then 6 else 4).join(' ')
         console.log pad + msg
 
