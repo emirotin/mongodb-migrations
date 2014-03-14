@@ -24,9 +24,23 @@
   config = null;
 
   readConfig = function(fileName) {
-    var e;
+    var e, ext, _i, _len, _ref;
     if (config) {
       return;
+    }
+    if (!fileName) {
+      _ref = ['json', 'js', 'coffee'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        ext = _ref[_i];
+        fileName = "mm-config." + ext;
+        if (fs.existsSync(path.join(dir, fileName))) {
+          break;
+        }
+        fileName = null;
+      }
+    }
+    if (!fileName) {
+      exit("Config file not specified, default not found");
     }
     try {
       fileName = path.join(dir, fileName);
@@ -72,7 +86,6 @@
   };
 
   optparser.script('mm').option('config', {
-    "default": 'mm-config.json',
     metavar: 'FILE',
     help: "The name of the file in the current directory, can be .js, or .json, or .coffee.\nFor .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory."
   });

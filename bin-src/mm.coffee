@@ -19,9 +19,19 @@ readConfig = (fileName) ->
   if config
     return
 
+  if not fileName
+    for ext in ['json', 'js', 'coffee']
+      fileName = "mm-config.#{ext}"
+      if fs.existsSync path.join dir, fileName
+        break
+      fileName = null
+
+  if not fileName
+    exit "Config file not specified, default not found"
+
   try
     fileName = path.join dir, fileName
-    if  fileName.match /\.coffee$/
+    if fileName.match /\.coffee$/
       require('coffee-script/register')
     config = _.extend {}, defaults, require(fileName)
   catch e
@@ -53,7 +63,6 @@ exit = (err) ->
 optparser
   .script 'mm'
   .option 'config',
-    default: 'mm-config.json'
     metavar: 'FILE'
     help: """
       The name of the file in the current directory, can be .js, or .json, or .coffee.
