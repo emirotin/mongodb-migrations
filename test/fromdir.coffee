@@ -32,4 +32,3 @@ describe 'Migrator', ->
               return done(err) if err
               count.should.be.equal 0
               done()
-
