@@ -78,7 +78,7 @@ following:
 
 #### Migration functions
 
-The `up` and `down` functions takes a single parameter — a Node-style callback:
+The `up` and `down` functions take a single parameter — a Node-style callback:
 
 ```
 module.exports.up = function (done) {
