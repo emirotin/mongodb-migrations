@@ -1,3 +1,12 @@
+## 0.1.x
+
+### 0.1.0
+
+* Full README
+* More tests
+
+## 0.0.x
+
 ### 0.0.9
 Automatically pick mm-config.{js,json,coffee}
 
