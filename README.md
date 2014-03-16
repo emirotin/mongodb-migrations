@@ -5,7 +5,7 @@
 
 ## Installation
 
-```
+```bash
   npm install mongodb-migrations --save
 ```
 
@@ -31,7 +31,7 @@ and `mm-config.coffee` files for existence.
 File name can be passed through the means of `--config` parameter.
 The path is relative to the current directory:
 
-```
+```bash
   mm --config=configs/mm.json
 ```
 
@@ -60,7 +60,7 @@ to store migration files in and read them from.
 
 The app simplifies creating migration stubs by providing a command
 
-```
+```bash
   mm create MIGRATION-NAME [--coffee|-c]
 ```
 
@@ -76,11 +76,14 @@ following:
 * `up` _[optional]_ — a function used for forward migration.
 * `down` _[optional]_ — a function used for backward migration (rollback).
 
+See [Configuration](#configuration) if your config file has
+non-standard name.
+
 #### Migration functions
 
 The `up` and `down` functions take a single parameter — a Node-style callback:
 
-```
+```javascript
 module.exports.up = function (done) {
   // call done() when migration is successfully finished
   // call done(error) in case of error
@@ -95,15 +98,46 @@ providing 2 convenient properties:
 connection. Useful if you are not using any ODM library.
 * `this.log` is a function allowing you to print
 informative messages during the progress of your migration.
-By default these messages are printed to `stdout` with proper indentation
-(see [Custom logging](#custom-logging) for advanced usage).
+By default these messages are printed to `stdout` with proper indentation.
+See [Custom logging](#custom-logging) for advanced usage.
 
 
 ### Sample migration file
 
+```javascript
+exports.id = 'create-toby';
+
+exports.up = function (done) {
+  var coll = this.db.collection('test');
+  coll.insert({ name: 'tobi' }, done);
+};
+
+exports.down = function (done) {
+  var coll = this.db.collection('test');
+  coll.remove({}, done);
+};
+```
+
 ### Running migrations
 
+Run all migrations from the directory by simply calling
+
+```bash
+mm
+```
+
+or
+
+```bash
+mm migrate
+```
+
+See [Configuration](#configuration) if your config file has
+non-standard name.
+
 ## Programmatic usage
+
+The library also supports programmatic usage.
 
 ### Creating `Migrator` object
 
@@ -117,6 +151,8 @@ By default these messages are printed to `stdout` with proper indentation
 ### Running
 
 ### Running from directory
+
+### Rollback
 
 ### Creating migrations
 
