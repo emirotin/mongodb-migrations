@@ -38,8 +38,8 @@ The path is relative to the current directory:
 In case of `json` the file should contain valid JSON representation of the
 configuration object.
 
-In case of `js` or `coffee` the file should be a CommonJS module exporting the
-configuration object.
+In case of `js` or `coffee` the file should be a CommonJS module
+exporting the configuration object.
 
 In case of `coffee` the `coffee-script >= 1.7.0` package must be importable
 from the current directory (include it as your project's dependency).
@@ -66,7 +66,8 @@ The app simplifies creating migration stubs by providing a command
 
 This creates automatically numbered file `NNN-migration-name.js`
 (or `.coffee` if `-c` of `--coffee` flag provided)
-inside of the `directory` defined in the [configuration](#configuration) file.
+inside of the `directory` defined in the
+[configuration](#configuration) file.
 
 The migration file must be a CommonJS module exporting the
 following:
@@ -132,8 +133,21 @@ or
 mm migrate
 ```
 
+The library only runs migrations that:
+1. have `up` function defined,
+1. were not ran before against this database.
+
+Once successfully ran migrations are logged in the `collection`
+specified in [Configuration](#configuration).
+
+The migration process is stopped instantly if some migration fails
+(returns error in its callback).
+
 See [Configuration](#configuration) if your config file has
 non-standard name.
+
+If you have `.coffee` migration files, `coffee-script >= 1.7.0` package
+must be importable from the current directory.
 
 ## Programmatic usage
 
@@ -192,7 +206,7 @@ To add a single migration, call
 migrator.add(migrationDef),
 ```
 
-where `migrationDef` is an object with `id`, `up` _[optional]_
+where `migrationDef` is an object with `id`, `up` _[optional]_,
 and `down` _[optional]_ keys, all having the same meaning
 as described in [Creating Migrations](#creating-migrations).
 
@@ -205,14 +219,107 @@ migrator.bulkAdd(migrationDefsArray),
 ```
 
 where `migrationDefsArray` is an array of objects explained in
-[migrator.add](#migrator.add).
+[migrator.add](#migratoradd).
 
-### Running
+### `migrator.migrate`
 
-### Running from directory
+Once you have one or more migrations added, run them with calling
 
-### Rollback
+```javascript
+migrator.migrate(doneFn, [progressFn]).
+```
 
-### Creating migrations
+Migrations are ran in order they were added to the `migrator`.
 
-### Tracking progress
+The `doneFn` is called one all migrations are ran or once one of them
+fails. The function has the signature
+
+```javascript
+function doneFn(error, results),
+```
+
+where `error` is `null` if everything is OK, or is an error
+returned by the failed migration (if any).
+
+The `results` object is always passed (even in case of error).
+
+Its keys are `id`s of the added migrations
+(till the one that failed, if any, or till the last one).
+The values are `result` objects having the following properties:
+
+* `status` — `'ok'`, `'skip'`, or `'error'`,
+* `error` - the `error` object returned from the failed migration,
+* `reason` — the reason why the migration was skipped, can be
+`'no migration function for direction up'`,
+`'no migration function for direction down'`,
+`'migration already ran'`,
+`'migration wasn't in the recent `migrate` run'`.
+See [Rollback](#rollback) for the explanation of the last case.
+
+The optional `progressFn` function is called once per each migration
+and has the signature
+
+```javascript
+function progressFn(id, result),
+```
+
+where `id` is migration's ID, and `result` object is explained above.
+
+### `migrator.runFromDir`
+
+In case your migrations are modules in specific directory
+(see [Running migrations](#running-migrations)) there's a convenience method
+that reads them in order and then runs.
+
+The files must conform to the following rules:
+
+1. have their names starting with digits
+(which defined the migrations order) — proper naming is held when
+[Creating Migrations](#creating-migrations) using the CLI `mm` tool,
+1. be CommonJS modules and export `id`, `up` _[optional]_,
+and `down` _[optional]_ — see [Creating Migrations](#creating-migrations)
+for explanation,
+1. if the migration file has `.coffee` extension, the
+`coffee-script >= 1.7.0` package must be importable
+from the current directory.
+
+To run the migrations from the `directory` call
+
+```javascript
+migrator.runFromDir(directory, doneFn, [progressFn])
+```
+
+The `doneFn` and `progressFn` have the same meaning as in
+[migrator.migrate](#migratormigrate).
+
+
+### `migrator.rollback`
+
+If you decide that current migration run was unsuccessful,
+you can roll back all recently ran transactions. Currently this
+operation is only supported through programatic interface.
+
+Do so by calling
+
+```javascript
+migrator.rollback()
+```
+
+### `migrator.create`
+
+To programmatically create a migration stub file, call
+
+```javascript
+migrator.create(directory, id, doneFn, coffeeScript=false),
+```
+
+where `directory` is the directory to save the file to,
+`id` is migration's ID, `doneFn` is a callback that gets
+passed the error object in case of error,
+and optional coffeeScript flags tells the library to create the stub
+in CoffeeScript.
+
+The ID is lowercased and then dasherized.
+
+The method automatically handles files numbering and naming,
+and sets the ID inside of the generated file.
