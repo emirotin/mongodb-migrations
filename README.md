@@ -139,14 +139,73 @@ non-standard name.
 
 The library also supports programmatic usage.
 
+Start with `require`'ing it:
+
+```javascript
+var mm = require('mongodb-migrations');
+```
+
 ### Creating `Migrator` object
+
+Next, you have to create a `Migrator` object. The syntax is:
+
+```javascript
+var migrator = new mm.Migrator(config, [customLogFn]);
+```
+
+Where `config` is an object with the keys defined in the
+[Configuration](#configuration) section (except of the `directory`
+which does not make sense in this scenario).
 
 #### Custom logging
 
+By default when migrations are ran `migrator` will log
+it's progress to console — 1 line for each migration added,
+indicating the status (skipped, succeeded or failed).
+It will also print any custom messages you pass to
+`this.log` inside of the `up` / `down` function.
+
+To suppress this logging pass `customLogFn = null` to the
+`Migrator` constructor (`undefined` won't do the trick).
+
+If you want to handle the logging on your own (save it to file, or
+whatever else) you can pass you custom function having this signature:
+
+```javascript
+function customLogFn(level, message),
+```
+
+where `level` is either `"system"` (migration status message)
+or `"user"` (when you call `this.log` inside of your migration),
+and `message` is the actual message string.
+
 ### Adding migrations
 
-#### `.add`
-#### `.bulkAdd`
+Once you have the `migrator` object you can add migrations
+definitions to it.
+
+#### `migrator.add`
+
+To add a single migration, call
+
+```javascript
+migrator.add(migrationDef),
+```
+
+where `migrationDef` is an object with `id`, `up` _[optional]_
+and `down` _[optional]_ keys, all having the same meaning
+as described in [Creating Migrations](#creating-migrations).
+
+#### `migrator.bulkAdd`
+
+To add multiple migrations at once, call
+
+```javascript
+migrator.bulkAdd(migrationDefsArray),
+```
+
+where `migrationDefsArray` is an array of objects explained in
+[migrator.add](#migrator.add).
 
 ### Running
 
