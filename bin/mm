@@ -1,0 +1,105 @@
+#!/usr/bin/env node
+
+(function() {
+  var Migrator, config, createMigration, createMigrator, cwd, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations, _;
+
+  fs = require('fs');
+
+  path = require('path');
+
+  optparser = require('nomnom');
+
+  _ = require('lodash');
+
+  mm = require('..');
+
+  Migrator = mm.Migrator;
+
+  defaults = {
+    directory: "migrations"
+  };
+
+  dir = process.cwd();
+
+  config = null;
+
+  readConfig = function(fileName) {
+    var e, ext, _i, _len, _ref;
+    if (config) {
+      return;
+    }
+    if (!fileName) {
+      _ref = ['json', 'js', 'coffee'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        ext = _ref[_i];
+        fileName = "mm-config." + ext;
+        if (fs.existsSync(path.join(dir, fileName))) {
+          break;
+        }
+        fileName = null;
+      }
+    }
+    if (!fileName) {
+      exit("Config file not specified, default not found");
+    }
+    try {
+      fileName = path.join(dir, fileName);
+      if (fileName.match(/\.coffee$/)) {
+        require('coffee-script/register');
+      }
+      return config = _.extend({}, defaults, require(fileName));
+    } catch (_error) {
+      e = _error;
+      return exit(fileName + " cannot be imported");
+    }
+  };
+
+  cwd = function() {
+    return path.join(dir, config.directory);
+  };
+
+  createMigrator = function() {
+    return new Migrator(config.db);
+  };
+
+  runMigrations = function(opts) {
+    readConfig(opts.config);
+    return createMigrator().runFromDir(cwd(), exit);
+  };
+
+  createMigration = function(opts) {
+    var id;
+    readConfig(opts.config);
+    id = opts._.slice(1).join(' ');
+    if (!id) {
+      exit("Migration ID is required");
+    }
+    return createMigrator().create(cwd(), id, exit, opts.coffee);
+  };
+
+  exit = function(err) {
+    if (err) {
+      console.error("Error: " + err);
+      process.exit(1);
+    }
+    return process.exit(0);
+  };
+
+  optparser.script('mm').option('config', {
+    metavar: 'FILE',
+    help: "The name of the file in the current directory, can be .js, or .json, or .coffee.\nFor .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory."
+  });
+
+  optparser.command('migrate').callback(runMigrations);
+
+  optparser.nocommand().callback(runMigrations);
+
+  optparser.command('create').option('coffee', {
+    abbr: 'c',
+    flag: true,
+    help: 'Generate migration stub in CoffeeScript'
+  }).callback(createMigration);
+
+  optparser.parse();
+
+}).call(this);

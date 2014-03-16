@@ -1,0 +1,47 @@
+{
+  "name": "mongodb-migrations",
+  "version": "0.1.0",
+  "description": "A migration framework for MongoDB",
+  "main": "lib/mongodb-migrations.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register -r should"
+  },
+  "bin": {
+    "mm": "./bin/mm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/emirotin/mongodb-migrations.git"
+  },
+  "keywords": [
+    "mongodb",
+    "mongo",
+    "migrate",
+    "migration",
+    "migrations"
+  ],
+  "author": "Eugene Mirotin <emirotin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emirotin/mongodb-migrations/issues"
+  },
+  "homepage": "https://github.com/emirotin/mongodb-migrations",
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "mongo-pool2": "^0.0.6",
+    "q": "^1.0.0",
+    "nomnom": "^1.6.2",
+    "mkdirp": "^0.3.5"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.7.0",
+    "should": "~3.1.2",
+    "mocha": "~1.17.1",
+    "rimraf": "~2.2.6",
+    "grunt": "~0.4.2",
+    "grunt-contrib-coffee": "~0.9.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-concat": "^0.3.0"
+  }
+}
