@@ -121,7 +121,8 @@ exports.down = function (done) {
 
 ### Running migrations
 
-Run all migrations from the directory by simply calling
+Run all migrations from the `directory` (specified in
+[Configuration](#configuration)) by simply calling
 
 ```bash
 mm
@@ -134,10 +135,11 @@ mm migrate
 ```
 
 The library only runs migrations that:
+
 1. have `up` function defined,
 1. were not ran before against this database.
 
-Once successfully ran migrations are logged in the `collection`
+Successfully ran migrations are recorded in the `collection`
 specified in [Configuration](#configuration).
 
 The migration process is stopped instantly if some migration fails
