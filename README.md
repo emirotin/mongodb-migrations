@@ -342,8 +342,8 @@ migrator.create(directory, id, doneFn, coffeeScript=false),
 where `directory` is the directory to save the file to,
 `id` is migration's ID, `doneFn` is a callback that gets
 passed the error object in case of error,
-and optional coffeeScript flags tells the library to create the stub
-in CoffeeScript.
+and optional `coffeeScript` flag tells the library to create the stub
+in CoffeeScript instead of plain JavaScript.
 
 The ID is lowercased and then dasherized.
 
