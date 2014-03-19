@@ -209,7 +209,7 @@ To suppress this logging pass `customLogFn = null` to the
 `Migrator` constructor (`undefined` won't do the trick).
 
 If you want to handle the logging on your own (save it to file, or
-whatever else) you can pass you custom function having this signature:
+whatever else) you can pass your custom function having this signature:
 
 ```javascript
 function customLogFn(level, message),
