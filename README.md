@@ -1,5 +1,29 @@
 # mongodb-migrations
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Installation](#installation)
+- [Common Usage (CLI)](#common-usage-cli)
+	- [Configuration](#configuration)
+	- [Creating Migrations](#creating-migrations)
+		- [Migration functions](#migration-functions)
+	- [Sample migration file](#sample-migration-file)
+	- [Running migrations](#running-migrations)
+- [Programmatic usage](#programmatic-usage)
+	- [Creating `Migrator` object](#creating-migrator-object)
+		- [Custom logging](#custom-logging)
+	- [Adding migrations](#adding-migrations)
+		- [`migrator.add`](#migratoradd)
+		- [`migrator.bulkAdd`](#migratorbulkadd)
+	- [`migrator.migrate`](#migratormigrate)
+	- [`migrator.runFromDir`](#migratorrunfromdir)
+	- [`migrator.rollback`](#migratorrollback)
+	- [`migrator.create`](#migratorcreate)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 > A Node.js migration framework for MongoDB with both programmatic and CLI API.
 
