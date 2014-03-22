@@ -1,5 +1,10 @@
 ## 0.1.x
 
+### 0.1.1
+
+* Minor README update
+* Technical release for fixing npm publish issue
+
 ### 0.1.0
 
 * Full README

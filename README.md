@@ -1,7 +1,31 @@
 # mongodb-migrations
 
-
 > A Node.js migration framework for MongoDB with both programmatic and CLI API.
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Installation](#installation)
+- [Common Usage (CLI)](#common-usage-cli)
+	- [Configuration](#configuration)
+	- [Creating Migrations](#creating-migrations)
+		- [Migration functions](#migration-functions)
+	- [Sample migration file](#sample-migration-file)
+	- [Running migrations](#running-migrations)
+- [Programmatic usage](#programmatic-usage)
+	- [Creating `Migrator` object](#creating-migrator-object)
+		- [Custom logging](#custom-logging)
+	- [Adding migrations](#adding-migrations)
+		- [`migrator.add`](#migratoradd)
+		- [`migrator.bulkAdd`](#migratorbulkadd)
+	- [`migrator.migrate`](#migratormigrate)
+	- [`migrator.runFromDir`](#migratorrunfromdir)
+	- [`migrator.rollback`](#migratorrollback)
+	- [`migrator.create`](#migratorcreate)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## Installation
 
@@ -121,7 +145,8 @@ exports.down = function (done) {
 
 ### Running migrations
 
-Run all migrations from the directory by simply calling
+Run all migrations from the `directory` (specified in
+[Configuration](#configuration)) by simply calling
 
 ```bash
 mm
@@ -134,10 +159,11 @@ mm migrate
 ```
 
 The library only runs migrations that:
+
 1. have `up` function defined,
 1. were not ran before against this database.
 
-Once successfully ran migrations are logged in the `collection`
+Successfully ran migrations are recorded in the `collection`
 specified in [Configuration](#configuration).
 
 The migration process is stopped instantly if some migration fails
@@ -183,7 +209,7 @@ To suppress this logging pass `customLogFn = null` to the
 `Migrator` constructor (`undefined` won't do the trick).
 
 If you want to handle the logging on your own (save it to file, or
-whatever else) you can pass you custom function having this signature:
+whatever else) you can pass your custom function having this signature:
 
 ```javascript
 function customLogFn(level, message),
@@ -316,8 +342,8 @@ migrator.create(directory, id, doneFn, coffeeScript=false),
 where `directory` is the directory to save the file to,
 `id` is migration's ID, `doneFn` is a callback that gets
 passed the error object in case of error,
-and optional coffeeScript flags tells the library to create the stub
-in CoffeeScript.
+and optional `coffeeScript` flag tells the library to create the stub
+in CoffeeScript instead of plain JavaScript.
 
 The ID is lowercased and then dasherized.
 
