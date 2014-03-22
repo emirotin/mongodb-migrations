@@ -257,7 +257,7 @@ migrator.migrate(doneFn, [progressFn]).
 
 Migrations are ran in order they were added to the `migrator`.
 
-The `doneFn` is called one all migrations are ran or once one of them
+The `doneFn` is called once all migrations are ran or once one of them
 fails. The function has the signature
 
 ```javascript
@@ -276,11 +276,11 @@ The values are `result` objects having the following properties:
 * `status` — `'ok'`, `'skip'`, or `'error'`,
 * `error` - the `error` object returned from the failed migration,
 * `reason` — the reason why the migration was skipped, can be
-`'no migration function for direction up'`,
-`'no migration function for direction down'`,
-`'migration already ran'`,
-`'migration wasn't in the recent `migrate` run'`.
-See [Rollback](#rollback) for the explanation of the last case.
+`"no migration function for direction up"`,
+`"no migration function for direction down"`,
+`"migration already ran"`,
+`"migration wasn't in the recent migrate run"`.
+See [Rollback](#migratorrollback) for the explanation of the last case.
 
 The optional `progressFn` function is called once per each migration
 and has the signature
@@ -299,8 +299,8 @@ that reads them in order and then runs.
 
 The files must conform to the following rules:
 
-1. have their names starting with digits
-(which defined the migrations order) — proper naming is held when
+1. have their names starting with one or more digits
+(this number defines the migrations order) — proper naming is held when
 [Creating Migrations](#creating-migrations) using the CLI `mm` tool,
 1. be CommonJS modules and export `id`, `up` _[optional]_,
 and `down` _[optional]_ — see [Creating Migrations](#creating-migrations)
@@ -331,6 +331,13 @@ Do so by calling
 migrator.rollback()
 ```
 
+This runs all the migrations added to the `migrator`
+in the reverse order, and follows these rules:
+
+1. migrations now having `down` method are skipped,
+1. migrations not ran recently (potentially those
+after the failed one) are skipped.
+
 ### `migrator.create`
 
 To programmatically create a migration stub file, call
@@ -345,7 +352,8 @@ passed the error object in case of error,
 and optional `coffeeScript` flag tells the library to create the stub
 in CoffeeScript instead of plain JavaScript.
 
-The ID is lowercased and then dasherized.
+The ID is lowercased and then dasherized. It's your
+responsibility to assure it's unique.
 
 The method automatically handles files numbering and naming,
 and sets the ID inside of the generated file.
