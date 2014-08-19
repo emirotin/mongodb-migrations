@@ -63,7 +63,9 @@ In case of `json` the file should contain valid JSON representation of the
 configuration object.
 
 In case of `js` or `coffee` the file should be a CommonJS module
-exporting the configuration object.
+exporting the configuration object. This is useful when you already have configuration
+data (potentially in a different format) and want to avoid duplication. See `test/mm-config.coffee`
+for an example of this usage.
 
 In case of `coffee` the `coffee-script >= 1.7.0` package must be importable
 from the current directory (include it as your project's dependency).

@@ -1,3 +1,9 @@
+## 0.2.x
+
+### 0.2.0
+
+* **[breaking change]** Simplify the expected config file structure — all keys are expected on the top level
+
 ## 0.1.x
 
 ### 0.1.2

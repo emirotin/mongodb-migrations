@@ -1,4 +1,4 @@
-module.exports =
-  db:
-    require('./common').config
+_ = require('lodash')
+
+module.exports = _.extend require('./common').config,
   directory: "created-migrations"
