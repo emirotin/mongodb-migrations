@@ -41,7 +41,7 @@ cwd = ->
   path.join dir, config.directory
 
 createMigrator = ->
-  new Migrator config.db
+  new Migrator config
 
 runMigrations = (opts) ->
   readConfig opts.config
