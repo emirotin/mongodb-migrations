@@ -59,7 +59,7 @@
   };
 
   createMigrator = function() {
-    return new Migrator(config.db);
+    return new Migrator(config);
   };
 
   runMigrations = function(opts) {

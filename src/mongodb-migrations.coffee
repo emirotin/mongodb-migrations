@@ -22,7 +22,6 @@ class Migrator
     if logFn or logFn == null
       @log = logFn
     else
-      util = require('util')
       @log = (src, msg) ->
         # TODO: console.error.bind(console, 'connection error:')
         pad = Array(if src == 'system' then 6 else 4).join(' ')

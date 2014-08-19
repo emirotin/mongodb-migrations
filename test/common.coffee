@@ -1,4 +1,3 @@
-#path = require 'path'
 mongoPool = require 'mongo-pool2'
 mm = require '../src/mongodb-migrations'
 
