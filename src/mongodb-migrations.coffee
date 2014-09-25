@@ -39,7 +39,7 @@ class Migrator
     db = @_pool.acquire()
     db.collection(@_collName)
 
-  _runWhenReady: (direction, cb) ->
+  _runWhenReady: (direction, cb, progress) ->
     onSuccess = =>
       @_ranMigrations = {}
       @_coll().find().toArray (err, docs) =>
@@ -47,7 +47,7 @@ class Migrator
           return cb err
         for doc in docs
           @_ranMigrations[doc.id] = true
-        @_run direction, cb
+        @_run direction, cb, progress
     onError = (err) ->
       cb err
     @_dbReady.then onSuccess, onError
@@ -80,6 +80,7 @@ class Migrator
     i = 0
     l = m.length
     migrationsCollection = @_coll()
+
     runOne = =>
       if i >= l
         return allDone()
