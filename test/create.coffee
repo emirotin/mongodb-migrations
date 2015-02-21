@@ -4,7 +4,7 @@ rimraf = require 'rimraf'
 mm = require '../src/mongodb-migrations'
 testsCommon = require './common'
 
-describe 'Migrator', ->
+describe 'Migrations Builder', ->
   migrator = null
   dir = path.join __dirname, 'created-migrations'
 

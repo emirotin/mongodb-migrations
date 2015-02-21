@@ -1,7 +1,7 @@
 mm = require '../src/mongodb-migrations'
 testsCommon = require './common'
 
-describe 'Migrator', ->
+describe 'Migrator Logging', ->
   it 'should allow custom logging', (done) ->
     messages = []
     log = (level, message) ->

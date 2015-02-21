@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 (function() {
-  var Migrator, config, createMigration, createMigrator, cwd, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations, _;
+  var Migrator, _, config, createMigration, createMigrator, cwd, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations;
 
   fs = require('fs');
 
@@ -24,14 +24,14 @@
   config = null;
 
   readConfig = function(fileName) {
-    var e, ext, _i, _len, _ref;
+    var e, ext, i, len, ref;
     if (config) {
       return;
     }
     if (!fileName) {
-      _ref = ['json', 'js', 'coffee'];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        ext = _ref[_i];
+      ref = ['json', 'js', 'coffee'];
+      for (i = 0, len = ref.length; i < len; i++) {
+        ext = ref[i];
         fileName = "mm-config." + ext;
         if (fs.existsSync(path.join(dir, fileName))) {
           break;
