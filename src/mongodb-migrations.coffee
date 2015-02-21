@@ -7,6 +7,7 @@ mongoPool = require 'mongo-pool2'
 
 class Migrator
   constructor: (dbConfig, logFn) ->
+    @_isDisposed = false
     @_m = []
     @_result = {}
     deferred = Q.defer()
@@ -40,6 +41,8 @@ class Migrator
     db.collection(@_collName)
 
   _runWhenReady: (direction, cb, progress) ->
+    if @_isDisposed
+      cb new Error 'This migrator is disposed and cannot be used anymore'
     onSuccess = =>
       @_ranMigrations = {}
       @_coll().find().toArray (err, docs) =>
@@ -205,5 +208,11 @@ class Migrator
           };
         """
       fs.writeFile fileName, body, done
+
+  dispose: (cb) ->
+    @_isDisposed = true
+    onSuccess = =>
+      @_pool.close cb
+    @_dbReady.then onSuccess, cb
 
 module.exports.Migrator = Migrator

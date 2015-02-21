@@ -8,21 +8,22 @@
 
 - [Installation](#installation)
 - [Common Usage (CLI)](#common-usage-cli)
-	- [Configuration](#configuration)
-	- [Creating Migrations](#creating-migrations)
-		- [Migration functions](#migration-functions)
-	- [Sample migration file](#sample-migration-file)
-	- [Running migrations](#running-migrations)
+  - [Configuration](#configuration)
+  - [Creating Migrations](#creating-migrations)
+    - [Migration functions](#migration-functions)
+  - [Sample migration file](#sample-migration-file)
+  - [Running migrations](#running-migrations)
 - [Programmatic usage](#programmatic-usage)
-	- [Creating `Migrator` object](#creating-migrator-object)
-		- [Custom logging](#custom-logging)
-	- [Adding migrations](#adding-migrations)
-		- [`migrator.add`](#migratoradd)
-		- [`migrator.bulkAdd`](#migratorbulkadd)
-	- [`migrator.migrate`](#migratormigrate)
-	- [`migrator.runFromDir`](#migratorrunfromdir)
-	- [`migrator.rollback`](#migratorrollback)
-	- [`migrator.create`](#migratorcreate)
+  - [Creating `Migrator` object](#creating-migrator-object)
+    - [Custom logging](#custom-logging)
+  - [Adding migrations](#adding-migrations)
+    - [`migrator.add`](#migratoradd)
+    - [`migrator.bulkAdd`](#migratorbulkadd)
+  - [`migrator.migrate`](#migratormigrate)
+  - [`migrator.runFromDir`](#migratorrunfromdir)
+  - [`migrator.rollback`](#migratorrollback)
+  - [`migrator.create`](#migratorcreate)
+  - [`migrator.dispose`](#migratordispose)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -359,3 +360,19 @@ responsibility to assure it's unique.
 
 The method automatically handles files numbering and naming,
 and sets the ID inside of the generated file.
+
+### `migrator.dispose`
+
+When you are done with the migrator you should call
+
+```javascript
+migrator.dispose(cb)
+```
+
+to release the MongoDB connections pool. Once disposed the migrator cannot be used anymore.
+
+The `cb` is a Node-style callback:
+
+```javascript
+function cb(error).
+```
