@@ -1,3 +1,9 @@
+## 0.3.x
+
+### 0.3.0
+
+* Updated mongo-pool2 to 0.1.0 which has MongoDB driver 1.4.x
+
 ## 0.2.x
 
 ### 0.2.0
