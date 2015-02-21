@@ -2,7 +2,7 @@ path = require 'path'
 mm = require '../src/mongodb-migrations'
 testsCommon = require './common'
 
-describe 'Migrator', ->
+describe 'Migrator from Directory', ->
   migrator = null
   db = null
   coll = null
@@ -26,9 +26,13 @@ describe 'Migrator', ->
           return done(err) if err
           count.should.be.equal 1
 
-          migrator.rollback (err, res) ->
+          coll.find({ok: 1}).count (err, count) ->
             return done(err) if err
-            coll.find().count (err, count) ->
+            count.should.be.equal 2
+
+            migrator.rollback (err, res) ->
               return done(err) if err
-              count.should.be.equal 0
-              done()
+              coll.find().count (err, count) ->
+                return done(err) if err
+                count.should.be.equal 0
+                done()
