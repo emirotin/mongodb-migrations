@@ -1,7 +1,7 @@
 mm = require '../src/mongodb-migrations'
 testsCommon = require './common'
 
-describe 'Migrator', ->
+describe 'Migrator Progress Reporting', ->
   it 'should call back the progress parameter', (done) ->
     messages = []
     log = (level, message) ->

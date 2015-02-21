@@ -1,7 +1,7 @@
 mm = require '../src/mongodb-migrations'
 testsCommon = require './common'
 
-describe 'Migrator', ->
+describe 'Migrator Errors Handling', ->
   migrator = null
   db = null
   coll = null

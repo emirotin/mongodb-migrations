@@ -2,7 +2,7 @@ path = require 'path'
 mm = require '../src/mongodb-migrations'
 testsCommon = require './common'
 
-describe 'Migrator', ->
+describe 'Migrator from Directory', ->
   migrator = null
   db = null
   coll = null
