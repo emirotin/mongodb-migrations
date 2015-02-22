@@ -42,7 +42,7 @@ class Migrator
 
   _runWhenReady: (direction, cb, progress) ->
     if @_isDisposed
-      cb new Error 'This migrator is disposed and cannot be used anymore'
+      return cb new Error 'This migrator is disposed and cannot be used anymore'
     onSuccess = =>
       @_ranMigrations = {}
       @_coll().find().toArray (err, docs) =>
