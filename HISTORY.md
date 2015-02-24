@@ -1,5 +1,9 @@
 ## 0.3.x
 
+### 0.3.1
+
+* Migrator#dispose to close the MongoDB connections
+
 ### 0.3.0
 
 * Updated mongo-pool2 to 0.1.0 which has MongoDB driver 1.4.x
