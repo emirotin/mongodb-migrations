@@ -1,5 +1,10 @@
 ## 0.4.x
 
+### 0.4.1
+
+* hotfix release
+
+
 ### 0.4.0
 
 * switch to native MongoClient.connect
