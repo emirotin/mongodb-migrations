@@ -13,7 +13,8 @@ module.exports =
   beforeEach: (done) ->
     mongoConnect config, (err, db) ->
       if err
-        return done err
+        console.error err
+        throw err
       db.collection(config.collection).remove {}, ->
         migrator = new mm.Migrator config, null
         done { migrator, db }

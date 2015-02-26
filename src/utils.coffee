@@ -28,6 +28,8 @@ buildMongoConnString = (config) ->
   if config.db
     s += config.db
 
+  return s
+
 exports.connect = (config, cb) ->
   poolSize = config.poolSize ? DEFAULT_POOL_SIZE
 
