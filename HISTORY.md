@@ -12,16 +12,15 @@ for the list of differences.
 
 * hotfix release
 
-
 ### 0.4.0
 
-* switch to native MongoClient.connect, removed dependency on mongo-pool2
+* switched to native MongoClient.connect, removed dependency on mongo-pool2
 
 ## 0.3.x
 
 ### 0.3.1
 
-* Migrator#dispose to close the MongoDB connections
+* Added Migrator#dispose to close the MongoDB connections
 
 ### 0.3.0
 
