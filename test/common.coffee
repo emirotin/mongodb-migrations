@@ -1,5 +1,5 @@
-mongoPool = require 'mongo-pool2'
 mm = require '../src/mongodb-migrations'
+mongoConnect = require('../src/utils').connect
 
 config =
   host: 'localhost'
@@ -11,7 +11,7 @@ module.exports =
   config: config
 
   beforeEach: (done) ->
-    mongoPool.connect config, (err, db) ->
+    mongoConnect config, (err, db) ->
       if err
         return done err
       db.collection(config.collection).remove {}, ->

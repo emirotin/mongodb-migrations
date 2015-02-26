@@ -1,3 +1,5 @@
+* switch to native MongoClient.connect
+
 ## 0.3.x
 
 ### 0.3.1

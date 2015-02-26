@@ -73,15 +73,16 @@ from the current directory (include it as your project's dependency).
 
 The configuration object can have the following keys:
 
-* `host` — MongoDB host
-* `port` — MongoDB port
-* `db` — MongoDB database name
-* `user` _[optional]_ — MongoDB user name when authentication is required
-* `password` _[optional]_ — MongoDB password when authentication is required
+* `host` — MongoDB host,
+* `port` — MongoDB port,
+* `db` — MongoDB database name,
+* `user` _[optional]_ — MongoDB user name when authentication is required,
+* `password` _[optional]_ — MongoDB password when authentication is required,
 * `collection` — The name of the MongoDB collection to track
-already ran migrations
+already ran migrations,
 * `directory` — the directory (path relative to the current folder)
-to store migration files in and read them from.
+to store migration files in and read them from,
+* `poolSize` - the size of the mongo connection pool.
 
 ### Creating Migrations
 
