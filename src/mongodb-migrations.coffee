@@ -3,7 +3,7 @@ path = require 'path'
 Q = require 'q'
 _ = require 'lodash'
 mkdirp = require 'mkdirp'
-mongoPool = require 'mongo-pool2'
+mongoConnect = require('./utils').connect
 
 class Migrator
   constructor: (dbConfig, logFn) ->
@@ -12,11 +12,11 @@ class Migrator
     @_result = {}
     deferred = Q.defer()
     @_dbReady = deferred.promise
-    mongoPool.create dbConfig, (err, pool) =>
+    mongoConnect dbConfig, (err, db) =>
       if err
         deferred.reject err
       else
-        @_pool = pool
+        @_db = db
         deferred.resolve()
     @_collName = dbConfig.collection
 
@@ -37,8 +37,7 @@ class Migrator
     @_m = @_m.concat array
 
   _coll: ->
-    db = @_pool.acquire()
-    db.collection(@_collName)
+    @_db.collection(@_collName)
 
   _runWhenReady: (direction, cb, progress) ->
     if @_isDisposed
@@ -123,7 +122,7 @@ class Migrator
         migrationDone status: 'skip', reason: skipReason
         return runOne()
 
-      context = { db: @_pool.acquire(), log: userLog }
+      context = { db: @_db, log: userLog }
       fn.call context, (err) ->
         if err
           migrationDone status: 'error', error: err
@@ -212,7 +211,11 @@ class Migrator
   dispose: (cb) ->
     @_isDisposed = true
     onSuccess = =>
-      @_pool.close cb
+      try
+        @_db.close()
+        cb?(null)
+      catch e
+        cb?(e)
     @_dbReady.then onSuccess, cb
 
 module.exports.Migrator = Migrator
