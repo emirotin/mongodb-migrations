@@ -1,3 +1,11 @@
+## 0.5.x
+
+### 0.5.0
+
+* **[_potentially_ breaking change]** MongoDB driver updated to 2.x. If you use the `db` object in your migrations
+check this [article](http://mongodb.github.io/node-mongodb-native/2.0/tutorials/changes-from-1.0/)
+for the list of differences.
+
 ## 0.4.x
 
 ### 0.4.1
@@ -7,7 +15,7 @@
 
 ### 0.4.0
 
-* switch to native MongoClient.connect
+* switch to native MongoClient.connect, removed dependency on mongo-pool2
 
 ## 0.3.x
 
