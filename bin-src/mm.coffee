@@ -4,6 +4,7 @@ fs = require('fs')
 path = require('path')
 optparser = require('nomnom')
 _ = require('lodash')
+debug = !!process.env.DEBUG
 
 mm = require('..')
 Migrator = mm.Migrator
@@ -35,7 +36,7 @@ readConfig = (fileName) ->
       require('coffee-script/register')
     config = _.extend {}, defaults, require(fileName)
   catch e
-    exit fileName + " cannot be imported"
+    exit fileName + " cannot be imported", e
 
 cwd = ->
   path.join dir, config.directory
@@ -54,10 +55,14 @@ createMigration = (opts) ->
     exit "Migration ID is required"
   createMigrator().create cwd(), id, exit, opts.coffee
 
-exit = (err) ->
-  if err
-    console.error "Error: " + err
+exit = (msg, err) ->
+  if debug
+    console.error err.stack
+
+  if msg
+    console.error "Error: " + msg
     process.exit 1
+
   process.exit 0
 
 optparser
