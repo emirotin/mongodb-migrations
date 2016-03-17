@@ -81,7 +81,10 @@
 
   exit = function(msg, err) {
     if (msg) {
-      console.error("Error: " + msg, debug && (err != null ? err.stack : void 0) ? console.error(err.stack) : void 0);
+      console.error("Error: " + msg);
+      if (debug && (err != null ? err.stack : void 0)) {
+        console.error(err.stack);
+      }
       process.exit(1);
     }
     return process.exit(0);
