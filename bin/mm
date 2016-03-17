@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 (function() {
-  var Migrator, _, config, createMigration, createMigrator, cwd, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations;
+  var Migrator, _, config, createMigration, createMigrator, cwd, debug, defaults, dir, exit, fs, mm, optparser, path, readConfig, runMigrations;
 
   fs = require('fs');
 
@@ -10,6 +10,8 @@
   optparser = require('nomnom');
 
   _ = require('lodash');
+
+  debug = !!process.env.DEBUG;
 
   mm = require('..');
 
@@ -50,7 +52,7 @@
       return config = _.extend({}, defaults, require(fileName));
     } catch (_error) {
       e = _error;
-      return exit(fileName + " cannot be imported");
+      return exit(fileName + " cannot be imported", e);
     }
   };
 
@@ -77,9 +79,12 @@
     return createMigrator().create(cwd(), id, exit, opts.coffee);
   };
 
-  exit = function(err) {
-    if (err) {
-      console.error("Error: " + err);
+  exit = function(msg, err) {
+    if (msg) {
+      console.error("Error: " + msg);
+      if (debug && (err != null ? err.stack : void 0)) {
+        console.error(err.stack);
+      }
       process.exit(1);
     }
     return process.exit(0);
