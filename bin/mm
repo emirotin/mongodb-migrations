@@ -80,13 +80,8 @@
   };
 
   exit = function(msg, err) {
-    if (debug) {
-      if (err && err.stack) {
-        console.error(err.stack);
-      }
-    }
     if (msg) {
-      console.error("Error: " + msg);
+      console.error("Error: " + msg, debug && (err != null ? err.stack : void 0) ? console.error(err.stack) : void 0);
       process.exit(1);
     }
     return process.exit(0);

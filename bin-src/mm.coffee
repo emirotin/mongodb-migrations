@@ -56,14 +56,11 @@ createMigration = (opts) ->
   createMigrator().create cwd(), id, exit, opts.coffee
 
 exit = (msg, err) ->
-  if debug
-    if err and err.stack
-      console.error err.stack
-
   if msg
-    console.error "Error: " + msg
+    console.error "Error: " + msg,
+    if debug and err?.stack
+      console.error err.stack
     process.exit 1
-
   process.exit 0
 
 optparser
