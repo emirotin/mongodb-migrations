@@ -57,7 +57,8 @@ createMigration = (opts) ->
 
 exit = (msg, err) ->
   if debug
-    console.error err.stack
+    if err and err.stack
+      console.error err.stack
 
   if msg
     console.error "Error: " + msg

@@ -81,7 +81,9 @@
 
   exit = function(msg, err) {
     if (debug) {
-      console.error(err.stack);
+      if (err && err.stack) {
+        console.error(err.stack);
+      }
     }
     if (msg) {
       console.error("Error: " + msg);
