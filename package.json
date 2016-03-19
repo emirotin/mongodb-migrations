@@ -1,9 +1,11 @@
 {
   "name": "mongodb-migrations",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A migration framework for MongoDB",
   "main": "lib/mongodb-migrations.js",
   "scripts": {
+    "build": "grunt",
+    "prepublish": "build",
     "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register -r should"
   },
   "bin": {
@@ -35,13 +37,14 @@
   },
   "devDependencies": {
     "coffee-script": "~1.9.1",
-    "grunt-contrib-coffee": "~0.13.0",
     "grunt": "~0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-coffee": "~0.13.0",
+    "grunt-contrib-concat": "~0.5.1",
     "grunt-contrib-watch": "~0.6.1",
-    "should": "~5.0.0",
     "mocha": "~2.1.0",
     "rimraf": "~2.2.8",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-concat": "~0.5.1"
+    "should": "~5.0.0"
   }
 }

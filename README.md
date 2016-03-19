@@ -179,6 +179,14 @@ non-standard name.
 If you have `.coffee` migration files, `coffee-script >= 1.7.0` package
 must be importable from the current directory.
 
+### Debugging migrations
+
+```bash
+DEBUG=true mm
+```
+
+Running with a `DEBUG=true` will print out the error stack on the console.
+
 ## Programmatic usage
 
 The library also supports programmatic usage.
