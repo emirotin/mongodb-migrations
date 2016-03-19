@@ -1,5 +1,8 @@
 ## 0.5.x
 
+### 0.5.1
+* Support DEBUG parameter for error stack reporting
+
 ### 0.5.0
 
 * **[_potentially_ breaking change]** MongoDB driver updated to 2.x. If you use the `db` object in your migrations

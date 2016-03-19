@@ -1,6 +1,6 @@
 {
   "name": "mongodb-migrations",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A migration framework for MongoDB",
   "main": "lib/mongodb-migrations.js",
   "scripts": {
