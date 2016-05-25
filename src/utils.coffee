@@ -12,7 +12,7 @@ buildMongoConnString = (config) ->
 
   if config.password
     if not hasUser
-      throw new Error 'Password provided but Username is not'
+      throw new Error 'Password provided but Username is not coffee'
     s += ':' + config.password
 
   if hasUser
