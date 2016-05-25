@@ -1,5 +1,7 @@
 ## 0.5.x
 
+* Support `config.ssl`
+
 ### 0.5.1
 * Support DEBUG parameter for error stack reporting
 

@@ -76,6 +76,7 @@ The configuration object can have the following keys:
 * `host` — MongoDB host,
 * `port` — MongoDB port,
 * `db` — MongoDB database name,
+* `ssl` _[optional]_ - boolean, if `true`, `'?ssl=true'` is added to the MongoDB URL,
 * `user` _[optional]_ — MongoDB user name when authentication is required,
 * `password` _[optional]_ — MongoDB password when authentication is required,
 * `collection` — The name of the MongoDB collection to track

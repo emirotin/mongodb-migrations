@@ -28,6 +28,9 @@ buildMongoConnString = (config) ->
   if config.db
     s += config.db
 
+  if config.ssl
+    s += '?ssl=true'
+
   return s
 
 exports.connect = (config, cb) ->
