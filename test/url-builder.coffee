@@ -3,6 +3,14 @@ urlBuilder = require '../src/url-builder'
 
 describe 'Url Builder', ->
 
+  it 'uses the url as given', (done) ->
+    config =
+      url: 'mongodb://aaa.bb.ccc:27101/some-db?ssl=true'
+
+    connString = urlBuilder.buildMongoConnString config
+    connString.should.be.equal config.url
+    done()
+
   it 'builds a single node url', (done) ->
     config =
       user: 'someuser'

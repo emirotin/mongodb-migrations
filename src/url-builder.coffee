@@ -1,5 +1,9 @@
 module.exports =
   buildMongoConnString: (config) ->
+
+    if config.url
+      return config.url
+
     s = "mongodb://"
 
     if config.user
