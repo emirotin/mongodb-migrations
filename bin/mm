@@ -26,7 +26,7 @@
   config = null;
 
   readConfig = function(fileName) {
-    var e, ext, i, len, ref;
+    var e, error, ext, i, len, ref;
     if (config) {
       return;
     }
@@ -50,8 +50,8 @@
         require('coffee-script/register');
       }
       return config = _.extend({}, defaults, require(fileName));
-    } catch (_error) {
-      e = _error;
+    } catch (error) {
+      e = error;
       return exit(fileName + " cannot be imported", e);
     }
   };

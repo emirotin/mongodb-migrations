@@ -1,6 +1,5 @@
 module.exports = (grunt) ->
 
-  # Project configuration.
   grunt.initConfig
     coffee:
       src:
@@ -30,11 +29,9 @@ module.exports = (grunt) ->
         files: '**/*.coffee'
         tasks: ['default']
 
-  # These plugins provide necessary tasks.
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-clean'
 
-  # Default task.
   grunt.registerTask 'default', ['coffee', 'concat', 'clean']
