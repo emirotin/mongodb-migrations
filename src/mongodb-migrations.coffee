@@ -1,6 +1,6 @@
 fs = require 'fs'
 path = require 'path'
-Q = require 'q'
+Promise = require 'bluebird'
 _ = require 'lodash'
 mkdirp = require 'mkdirp'
 mongoConnect = require('./utils').connect
@@ -10,14 +10,11 @@ class Migrator
     @_isDisposed = false
     @_m = []
     @_result = {}
-    deferred = Q.defer()
-    @_dbReady = deferred.promise
-    mongoConnect dbConfig, (err, db) =>
-      if err
-        deferred.reject err
-      else
-        @_db = db
-        deferred.resolve()
+    @_dbReady = new Promise.fromCallback (cb) ->
+      mongoConnect dbConfig, cb
+    .then (db) =>
+      @_db = db
+
     @_collName = dbConfig.collection
 
     if logFn or logFn == null
@@ -76,7 +73,7 @@ class Migrator
     insertPromises = []
 
     allDone = (err) =>
-      Q.all(insertPromises).then =>
+      Promise.all(insertPromises).then =>
         done err, @_result
 
     i = 0
@@ -100,13 +97,9 @@ class Migrator
         if res.status == 'error'
           systemLog '  ' + res.error
         if res.status == 'ok'
-          deferred = Q.defer()
-          insertPromises.push deferred.promise
-          migrationsCollection.insert { id: migration.id }, (err) ->
-            if err
-              deferred.reject err
-            else
-              deferred.resolve()
+          insertPromises.push Promise.fromCallback (cb) ->
+            { id } = migration
+            migrationsCollection.insert { id }, cb
 
       fn = migration[direction]
       id = migration.id

@@ -1,4 +1,6 @@
-* Support for replicasets
+* Migrated from Q to Bluebird
+* Updated dependencies
+* Added support for replicasets (kudos @antony)
 
 ## 0.5.x
 

@@ -30,11 +30,11 @@
   },
   "homepage": "https://github.com/emirotin/mongodb-migrations",
   "dependencies": {
+    "bluebird": "^3.4.1",
     "lodash": "^4.13.0",
-    "q": "^1.0.0",
-    "nomnom": "^1.6.2",
     "mkdirp": "^0.5.1",
-    "mongodb": "^2.2.1"
+    "mongodb": "^2.2.1",
+    "nomnom": "^1.6.2"
   },
   "devDependencies": {
     "coffee-script": "~1.10.0",
