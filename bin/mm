@@ -49,7 +49,7 @@
       if (fileName.match(/\.coffee$/)) {
         require('coffee-script/register');
       }
-      return config = _.extend({}, defaults, require(fileName));
+      return config = _.assign({}, defaults, require(fileName));
     } catch (error) {
       e = error;
       return exit(fileName + " cannot be imported", e);
