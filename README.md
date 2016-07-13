@@ -73,8 +73,8 @@ from the current directory (include it as your project's dependency).
 
 The configuration object can have the following keys:
 
-* `host` — MongoDB host,
-* `port` — MongoDB port,
+* `host` — MongoDB host (_optional_ when using _replicaset_),
+* `port` — MongoDB port (_optional_ when using _replicaset_),
 * `db` — MongoDB database name,
 * `ssl` _[optional]_ - boolean, if `true`, `'?ssl=true'` is added to the MongoDB URL,
 * `user` _[optional]_ — MongoDB user name when authentication is required,
@@ -83,7 +83,21 @@ The configuration object can have the following keys:
 already ran migrations,
 * `directory` — the directory (path relative to the current folder)
 to store migration files in and read them from,
-* `poolSize` - the size of the mongo connection pool.
+* `poolSize` - the size of the mongo connection pool,
+* `replicaset` _[optional]_ - if using replica sets should be an object of the following structure:
+```
+name: 'rs-ds023680',
+members: [
+  {
+    host: 'bee.boo.bar',
+    port: 23680
+  }
+  {
+    host: 'choo.choo',
+    port: 24610
+  }
+]
+```
 
 ### Creating Migrations
 

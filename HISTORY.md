@@ -1,3 +1,7 @@
+## 0.6.x
+
+### 0.6.0
+
 * Migrated from Q to Bluebird
 * Updated dependencies
 * Added support for replicasets (kudos @antony)
