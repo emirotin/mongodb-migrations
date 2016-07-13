@@ -6,7 +6,7 @@
   "scripts": {
     "build": "grunt",
     "prepublish": "npm test && npm run build",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register -r should"
+    "test": "mocha --compilers coffee:coffee-script/register -r should"
   },
   "bin": {
     "mm": "./bin/mm"
@@ -32,19 +32,19 @@
     "lodash": "^3.3.0",
     "q": "^1.0.0",
     "nomnom": "^1.6.2",
-    "mkdirp": "^0.3.5",
-    "mongodb": "^2.0.0"
+    "mkdirp": "^0.5.1",
+    "mongodb": "^2.2.1"
   },
   "devDependencies": {
-    "coffee-script": "~1.9.1",
+    "coffee-script": "~1.10.0",
     "grunt": "~0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-coffee": "~0.13.0",
     "grunt-contrib-concat": "~0.5.1",
     "grunt-contrib-watch": "~0.6.1",
-    "mocha": "~2.1.0",
-    "rimraf": "~2.2.8",
-    "should": "~5.0.0"
+    "mocha": "^2.5.3",
+    "rimraf": "^2.5.3",
+    "should": "^9.0.2"
   }
 }
