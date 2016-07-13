@@ -34,7 +34,7 @@ readConfig = (fileName) ->
     fileName = path.join dir, fileName
     if fileName.match /\.coffee$/
       require('coffee-script/register')
-    config = _.extend {}, defaults, require(fileName)
+    config = _.assign {}, defaults, require(fileName)
   catch e
     exit fileName + " cannot be imported", e
 

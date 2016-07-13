@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/emirotin/mongodb-migrations",
   "dependencies": {
-    "lodash": "^3.3.0",
+    "lodash": "^4.13.0",
     "q": "^1.0.0",
     "nomnom": "^1.6.2",
     "mkdirp": "^0.5.1",

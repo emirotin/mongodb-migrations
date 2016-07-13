@@ -153,29 +153,30 @@ class Migrator
             n = f.match(/^(\d+)/)?[1]
             if n
               n = parseInt n, 10
-            else n = null
-            [n, f]
-          .filter (f) -> !!f[0]
-          .sort (f1, f2) -> f1[0] - f2[0]
+            else
+              n = null
+            return  { number: n, name: f }
+          .filter (f) -> !!f.name
+          .sort (f1, f2) -> f1.number - f2.number
           .map (f) ->
-            fileName = path.join dir, f[1]
+            fileName = path.join dir, f.name
             if fileName.match /\.coffee$/
               require('coffee-script/register')
-            [f[0], require fileName]
+            return { number: f.number, module: require(fileName) }
         cb null, files
 
   runFromDir: (dir, done, progress) ->
     @_loadMigrationFiles dir, (err, files) =>
       if err
         return done err
-      @bulkAdd files.map (f) -> f[1]
+      @bulkAdd _.map(files, 'module')
       @migrate done, progress
 
   create: (dir, id, done, coffeeScript=false) ->
     @_loadMigrationFiles dir, (err, files) ->
       if err
         return done err
-      maxNum = _.max files.map (f) -> f[0]
+      maxNum = _.maxBy(files, 'number')
       nextNum = Math.max(maxNum, 0) + 1
       slug = (id or '').toLowerCase().replace /\s+/, '-'
       ext = if coffeeScript then 'coffee' else 'js'
