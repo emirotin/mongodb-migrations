@@ -1,3 +1,5 @@
+* Support for replicasets
+
 ## 0.5.x
 
 ### 0.5.2

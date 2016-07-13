@@ -1,3 +1,11 @@
+_ = require('lodash')
+
+buildHost = (opts) ->
+  host = opts.host
+  if opts.port
+    host += ':' + opts.port
+  return host
+
 module.exports =
   buildMongoConnString: (config) ->
 
@@ -18,18 +26,10 @@ module.exports =
     if hasUser
       s += '@'
 
-    if config.replicaset
-      replicas = []
-      for member in config.replicaset.members
-        host = member.host
-        if member.port
-          host += ':' + member.port
-        replicas.push host
-      s += replicas.join ','
+    if replicaset = config.replicaset
+      s += replicaset.members.map(buildHost).join ','
     else
-      s += config.host
-      if config.port
-        s+= ':' + config.port
+      s += buildHost(config)
 
     s += '/'
 
