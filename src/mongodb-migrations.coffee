@@ -4,6 +4,7 @@ Promise = require 'bluebird'
 _ = require 'lodash'
 mkdirp = require 'mkdirp'
 mongoConnect = require('./utils').connect
+migrationStub = require('./migration-stub')
 
 class Migrator
   constructor: (dbConfig, logFn) ->
@@ -174,32 +175,7 @@ class Migrator
       slug = (id or '').toLowerCase().replace /\s+/, '-'
       ext = if coffeeScript then 'coffee' else 'js'
       fileName = path.join dir, "#{nextNum}-#{slug}.#{ext}"
-      if coffeeScript
-        body = """
-          module.exports.id = "#{id}"
-
-          module.exports.up = (done) ->
-            # use @db for MongoDB communication, and @log() for logging
-            done()
-
-          module.exports.down = (done) ->
-            # use @db for MongoDB communication, and @log() for logging
-            done()
-        """
-      else
-        body = """
-          module.exports.id = "#{id}";
-
-          module.exports.up = function (done) {
-            // use this.db for MongoDB communication, and this.log() for logging
-            done();
-          };
-
-          module.exports.down = function (done) {
-            // use this.db for MongoDB communication, and this.log() for logging
-            done();
-          };
-        """
+      body = migrationStub(id, coffeeScript)
       fs.writeFile fileName, body, done
 
   dispose: (cb) ->

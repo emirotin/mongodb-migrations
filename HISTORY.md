@@ -1,5 +1,6 @@
 ## 0.6.x
 
+* Code refactoring
 * Fixed tests for true-ish values
 
 ### 0.6.1
