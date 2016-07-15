@@ -12,6 +12,6 @@ describe 'Migrator Dispose', ->
       migrator.dispose (err) ->
         return done(err) if err
         migrator.rollback (err) ->
-          (err?).should.be.ok
+          (err?).should.be.ok()
           err.toString().should.match /disposed/
           done()

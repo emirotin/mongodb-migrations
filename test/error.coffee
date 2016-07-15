@@ -33,18 +33,18 @@ describe 'Migrator Errors Handling', ->
     migrator.migrate (err, res) ->
       err.toString().should.endWith 'Some error'
 
-      res.should.be.ok
+      res.should.be.ok()
 
-      res['1'].should.be.ok
+      res['1'].should.be.ok()
       res['1'].status.should.be.equal 'ok'
 
-      res['2'].should.be.ok
+      res['2'].should.be.ok()
       res['2'].status.should.be.equal 'ok'
 
-      res['3'].should.be.ok
+      res['3'].should.be.ok()
       res['3'].status.should.be.equal 'error'
       res['3'].error.toString().should.endWith 'Some error'
 
-      (!res['4']).should.be.ok
+      (!res['4']).should.be.ok()
 
       done()

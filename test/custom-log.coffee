@@ -18,7 +18,7 @@ describe 'Migrator Logging', ->
         cb()
     migrator.migrate (err, res) ->
       return done(err) if err
-      res['1'].should.be.ok
+      res['1'].should.be.ok()
       messages.should.have.lengthOf 2
       messages[0].should.be.equal '1'
       messages[1].should.be.equal '2'

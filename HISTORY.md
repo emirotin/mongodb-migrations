@@ -1,5 +1,7 @@
 ## 0.6.x
 
+* Fixed tests for true-ish values
+
 ### 0.6.1
 
 * Fix regression - wrong migration files prefix
