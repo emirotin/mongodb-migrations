@@ -1,5 +1,7 @@
 ## 0.6.x
 
+### 0.6.1
+
 * Fix regression - wrong migration files prefix
 
 ### 0.6.0
