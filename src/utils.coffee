@@ -8,3 +8,6 @@ exports.connect = (config, cb) ->
 
   url = urlBuilder.buildMongoConnString(config)
   MongoClient.connect url, { server: { poolSize } }, cb
+
+exports.repeatString = (str, n) ->
+  Array(n + 1).join(str)

@@ -8,14 +8,14 @@ buildHost = (opts) ->
 
 module.exports =
   buildMongoConnString: (config) ->
+    hasUser = !!config.user
 
     if config.url
       return config.url
 
     s = "mongodb://"
 
-    if config.user
-      hasUser = true
+    if hasUser
       s += config.user
 
     if config.password

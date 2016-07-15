@@ -4,13 +4,19 @@ Promise = require 'bluebird'
 _ = require 'lodash'
 mkdirp = require 'mkdirp'
 mongoConnect = require('./utils').connect
+repeatString = require('./utils').repeatString
 migrationStub = require('./migration-stub')
+
+defaultLog = (src, args...) ->
+  pad = repeatString(' ', if src is 'system' then 4 else 2)
+  console.log(pad, args...)
 
 class Migrator
   constructor: (dbConfig, logFn) ->
     @_isDisposed = false
     @_m = []
     @_result = {}
+
     @_dbReady = new Promise.fromCallback (cb) ->
       mongoConnect dbConfig, cb
     .then (db) =>
@@ -18,13 +24,10 @@ class Migrator
 
     @_collName = dbConfig.collection
 
-    if logFn or logFn == null
+    if logFn or logFn is null
       @log = logFn
     else
-      @log = (src, msg) ->
-        # TODO: console.error.bind(console, 'connection error:')
-        pad = Array(if src == 'system' then 6 else 4).join(' ')
-        console.log pad + msg
+      @log = defaultLog
 
   add: (m) ->
     # m must be an { id, up, down } object
