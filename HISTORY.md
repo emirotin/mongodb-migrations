@@ -1,5 +1,7 @@
 ## 0.6.x
 
+* Fix regression - wrong migration files prefix
+
 ### 0.6.0
 
 * Migrated from Q to Bluebird

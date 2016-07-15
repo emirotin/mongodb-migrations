@@ -169,8 +169,8 @@ class Migrator
     @_loadMigrationFiles dir, (err, files) ->
       if err
         return done err
-      maxNum = _.maxBy(files, 'number')
-      nextNum = Math.max(maxNum, 0) + 1
+      maxNum = _.maxBy(files, 'number')?.number ? 0
+      nextNum = maxNum + 1
       slug = (id or '').toLowerCase().replace /\s+/, '-'
       ext = if coffeeScript then 'coffee' else 'js'
       fileName = path.join dir, "#{nextNum}-#{slug}.#{ext}"

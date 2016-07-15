@@ -10,7 +10,7 @@ describe 'Migrations Builder', ->
 
   beforeEach (done) ->
     testsCommon.beforeEach (res) ->
-      {migrator} = res
+      { migrator } = res
       rimraf dir, done
 
   it 'should create migration stubs for JS', (done) ->
