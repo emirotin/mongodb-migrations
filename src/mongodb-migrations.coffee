@@ -23,6 +23,7 @@ class Migrator
       @_db = db
 
     @_collName = dbConfig.collection
+    @_timeout = dbConfig.timeout
 
     if logFn or logFn is null
       @log = logFn
@@ -119,14 +120,27 @@ class Migrator
         migrationDone status: 'skip', reason: skipReason
         return runOne()
 
-      context = { db: @_db, log: userLog }
-      fn.call context, (err) ->
-        if err
+      if not @_timeout
+        timeoutProtect = true
+      else
+        timeoutProtect = setTimeout () ->
+          timeoutProtect = null
+          err = new Error "migration timed-out"
           migrationDone status: 'error', error: err
           allDone(err)
-        else
-          migrationDone status: 'ok'
-          runOne()
+        , @_timeout
+
+      context = { db: @_db, log: userLog }
+      fn.call context, (err) ->
+        if timeoutProtect
+          clearTimeout timeoutProtect
+
+          if err
+            migrationDone status: 'error', error: err
+            allDone(err)
+          else
+            migrationDone status: 'ok'
+            runOne()
 
     runOne()
 
