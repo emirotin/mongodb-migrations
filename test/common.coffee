@@ -6,7 +6,7 @@ config =
   port: 27017
   db: '_mm'
   collection: '_migrations'
-  timeout: 10
+  timeout: 200
 
 module.exports =
   config: config

@@ -120,11 +120,10 @@ class Migrator
         migrationDone status: 'skip', reason: skipReason
         return runOne()
 
-      if not @_timeout
-        timeoutProtect = true
-      else
-        timeoutProtect = setTimeout () ->
-          timeoutProtect = null
+      isCallbackCalled = false
+      if @_timeout
+        timeoutId = setTimeout () ->
+          isCallbackCalled = true
           err = new Error "migration timed-out"
           migrationDone status: 'error', error: err
           allDone(err)
@@ -132,15 +131,15 @@ class Migrator
 
       context = { db: @_db, log: userLog }
       fn.call context, (err) ->
-        if timeoutProtect
-          clearTimeout timeoutProtect
+        return if isCallbackCalled
+        clearTimeout timeoutId
 
-          if err
-            migrationDone status: 'error', error: err
-            allDone(err)
-          else
-            migrationDone status: 'ok'
-            runOne()
+        if err
+          migrationDone status: 'error', error: err
+          allDone(err)
+        else
+          migrationDone status: 'ok'
+          runOne()
 
     runOne()
 

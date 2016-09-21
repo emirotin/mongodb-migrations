@@ -40,7 +40,7 @@ describe 'Migrator', ->
         setTimeout () ->
           console.log 'running callback'
           cb()
-        , 20
+        , 300
     migrator.migrate (err) ->
       return done(new Error 'migration should have failed') if not err
       err.message.should.be.equal 'migration timed-out'
