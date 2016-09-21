@@ -83,6 +83,7 @@ The configuration object can have the following keys:
 already ran migrations,
 * `directory` — the directory (path relative to the current folder)
 to store migration files in and read them from,
+* `timeout` _[optional]_ — time in milliseconds after which migration should fail if `done()` is not called (use 0 to disable timeout) 
 * `poolSize` - the size of the mongo connection pool,
 * `replicaset` _[optional]_ - if using replica sets should be an object of the following structure:
 ```
