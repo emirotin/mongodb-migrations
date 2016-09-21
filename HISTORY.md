@@ -1,4 +1,4 @@
-## 0.6.x
+## 0.6.2
 
 * Added support for `timeout` options (kudos @alyyousuf7)
 * Code refactoring
