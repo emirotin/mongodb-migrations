@@ -1,5 +1,6 @@
 ## 0.6.x
 
+* Added support for `timeout` options (kudos @alyyousuf7)
 * Code refactoring
 * Fixed tests for true-ish values
 
