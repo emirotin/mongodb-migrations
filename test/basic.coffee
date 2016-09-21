@@ -33,6 +33,19 @@ describe 'Migrator', ->
         count.should.be.equal 1
         done()
 
+  it 'should timeout migration and return error', (done) ->
+    migrator.add
+      id: '1'
+      up: (cb) ->
+        setTimeout () ->
+          console.log 'running callback'
+          cb()
+        , 300
+    migrator.migrate (err) ->
+      return done(new Error 'migration should have failed') if not err
+      err.message.should.be.equal 'migration timed-out'
+      done()
+
   it 'should allow rollback', (done) ->
     migrator.add
       id: 1
