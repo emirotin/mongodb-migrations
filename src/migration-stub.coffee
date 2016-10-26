@@ -13,6 +13,8 @@ module.exports = (id, coffeeScript) ->
     """
   else
     return """
+      'use strict';
+
       module.exports.id = "#{id}";
 
       module.exports.up = function (done) {
