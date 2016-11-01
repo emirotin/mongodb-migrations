@@ -362,7 +362,7 @@ migrator.rollback()
 This runs all the migrations added to the `migrator`
 in the reverse order, and follows these rules:
 
-1. migrations now having `down` method are skipped,
+1. migrations without `down` method are skipped,
 1. migrations not ran recently (potentially those
 after the failed one) are skipped.
 
