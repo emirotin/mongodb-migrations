@@ -1,14 +1,15 @@
 _ = require('lodash')
 
 buildHost = (opts) ->
-  host = opts.host
-  if opts.port
-    host += ':' + opts.port
+  { host, port } = opts
+  if port
+    host += ':' + port
   return host
 
 module.exports =
   buildMongoConnString: (config) ->
     hasUser = !!config.user
+    { replicaset } = config
 
     if config.url
       return config.url
@@ -20,13 +21,13 @@ module.exports =
 
     if config.password
       if not hasUser
-        throw new Error 'Password provided but Username is not'
+        throw new Error '`password` provided but `user` is not'
       s += ':' + config.password
 
     if hasUser
       s += '@'
 
-    if replicaset = config.replicaset
+    if replicaset
       s += replicaset.members.map(buildHost).join ','
     else
       s += buildHost(config)
@@ -38,8 +39,8 @@ module.exports =
 
     params = []
 
-    if config.replicaset
-      params.push 'replicaSet=' + config.replicaset.name
+    if replicaset
+      params.push 'replicaSet=' + replicaset.name
 
     if config.ssl
       params.push 'ssl=true'

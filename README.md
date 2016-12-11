@@ -73,15 +73,14 @@ from the current directory (include it as your project's dependency).
 
 The configuration object can have the following keys:
 
-* `host` — MongoDB host (_optional_ when using _replicaset_),
-* `port` — MongoDB port (_optional_ when using _replicaset_),
+* `host` — MongoDB host (_optional_ when using _replicaset_, **required** otherwise),
+* `port` _[optional]_ — MongoDB port,
 * `db` — MongoDB database name,
 * `ssl` _[optional]_ - boolean, if `true`, `'?ssl=true'` is added to the MongoDB URL,
 * `user` _[optional]_ — MongoDB user name when authentication is required,
 * `password` _[optional]_ — MongoDB password when authentication is required,
 * `collection` _[optional]_ — The name of the MongoDB collection to track already ran migrations, **defaults to `_migrations`**,
-* `directory` — the directory (path relative to the current folder)
-to store migration files in and read them from,
+* `directory` — the directory (path relative to the current folder) to store migration files in and read them from, used when running from the command-line or when using `runFromDir`,
 * `timeout` _[optional]_ — time in milliseconds after which migration should fail if `done()` is not called (use 0 to disable timeout) 
 * `poolSize` _[optional, **deprecated, use `options.server.poolSize` instead**]_ - the size of the mongo connection pool,
 * `options` _[optional]_ - arbitrary options passed to the MongoClient (_Note: if not set directly, `options.server.poolSize` defaults to `5`._),

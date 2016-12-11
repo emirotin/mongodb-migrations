@@ -3,11 +3,9 @@ path = require 'path'
 Promise = require 'bluebird'
 _ = require 'lodash'
 mkdirp = require 'mkdirp'
-mongoConnect = require('./utils').connect
-repeatString = require('./utils').repeatString
+{ repeatString, connect: mongoConnect, normalizeConfig } = require('./utils')
 migrationStub = require('./migration-stub')
 
-DEFAULT_COLLECTION = '_migrations'
 
 defaultLog = (src, args...) ->
   pad = repeatString(' ', if src is 'system' then 4 else 2)
@@ -15,6 +13,9 @@ defaultLog = (src, args...) ->
 
 class Migrator
   constructor: (dbConfig, logFn) ->
+    # this will throw in case of invalid values
+    dbConfig = normalizeConfig(dbConfig)
+
     @_isDisposed = false
     @_m = []
     @_result = {}
@@ -24,7 +25,7 @@ class Migrator
     .then (db) =>
       @_db = db
 
-    @_collName = dbConfig.collection or DEFAULT_COLLECTION
+    @_collName = dbConfig.collection
     @_timeout = dbConfig.timeout
 
     if logFn or logFn is null

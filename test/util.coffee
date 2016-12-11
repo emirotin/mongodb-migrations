@@ -1,9 +1,9 @@
-{ _buildOptions } = require '../src/utils'
+{ _buildOptions, normalizeConfig } = require '../src/utils'
 
 describe 'Utils', ->
 
     describe '_buildOptions', ->
-        
+
         it 'should allow custom options and set the default `poolSize` of 5', (done) ->
             config =
                 options:
@@ -76,4 +76,67 @@ describe 'Utils', ->
                     x: 1
                     poolSize: 4
             })
+            done()
+
+
+    describe 'normalizeConfig', ->
+        it 'should throw without config', (done) ->
+            normalizeConfig.should.throw('`config` is not provided or is not an object')
+            done()
+
+        it 'should throw with wrong replicaset 1', (done) ->
+            normalizeConfig.bind(null, {
+                replicaset: 7
+            }).should.throw('`replicaset` is not an object')
+            done()
+
+        it 'should throw with wrong replicaset 2', (done) ->
+            normalizeConfig.bind(null, {
+                replicaset: {}
+            }).should.throw('`replicaset.name` is not set')
+            done()
+
+        it 'should throw with wrong replicaset 3', (done) ->
+            normalizeConfig.bind(null, {
+                replicaset: {
+                    name: 'x'
+                }
+            }).should.throw('`replicaset.members` is not set or is not an array')
+            done()
+
+        it 'should throw with wrong replicaset 4', (done) ->
+            normalizeConfig.bind(null, {
+                replicaset: {
+                    name: 'x',
+                    members: 'lol'
+                }
+            }).should.throw('`replicaset.members` is not set or is not an array')
+            done()
+
+        it 'should throw with wrong replicaset 5', (done) ->
+            normalizeConfig.bind(null, {
+                replicaset: {
+                    name: 'x',
+                    members: [{ xost: 'x' }]
+                }
+            }).should.throw('each of `replicaset.members` must have `host` set')
+            done()
+
+        it 'should throw without host and replicaset', (done) ->
+            normalizeConfig.bind(null, {
+            }).should.throw('`host` is required when `replicaset` is not set')
+            done()
+
+        it 'should throw without db', (done) ->
+            normalizeConfig.bind(null, {
+                host: 'localhost'
+            }).should.throw('`db` is not set')
+            done()
+
+        it 'should throw with password but without username', (done) ->
+            normalizeConfig.bind(null, {
+                host: 'localhost',
+                db: '_mm',
+                password: 'very secret password'
+            }).should.throw('`password` provided but `user` is not')
             done()
