@@ -78,15 +78,25 @@ class Migrator
     userLog = log('user')
     systemLog = log('system')
 
-    insertPromises = []
-
-    allDone = (err) =>
-      Promise.all(insertPromises).then =>
-        done err, @_result
-
     i = 0
     l = m.length
     migrationsCollection = @_coll()
+
+    migrationsCollectionUpdatePromises = []
+
+    handleMigrationDone = (id) ->
+      p = if direction == 'up'
+        Promise.fromCallback (cb) ->
+          migrationsCollection.insert { id }, cb
+      else
+        Promise.fromCallback (cb) ->
+          migrationsCollection.deleteOne { id }, cb
+
+      migrationsCollectionUpdatePromises.push(p)
+
+    allDone = (err) =>
+      Promise.all(migrationsCollectionUpdatePromises).then =>
+        done err, @_result
 
     runOne = =>
       if i >= l
@@ -104,10 +114,8 @@ class Migrator
         systemLog msg
         if res.status == 'error'
           systemLog '  ' + res.error
-        if res.status == 'ok'
-          insertPromises.push Promise.fromCallback (cb) ->
-            { id } = migration
-            migrationsCollection.insert { id }, cb
+        if res.status in [ 'ok', 'skip' ]
+          handleMigrationDone(migration.id)
 
       fn = migration[direction]
       id = migration.id
