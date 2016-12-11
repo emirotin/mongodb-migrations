@@ -1,3 +1,6 @@
+* Added support for the arbitrary connection options (passed down to `MongoClient`). Direct usage of `poolSize` is deprecated (to be removed in 1.0)
+* **[_potentially_ breaking change]** Added `'use strict';` to the generated JS migration stub (@alyyousuf7).  
+
 ## 0.6.2
 
 * Added support for `timeout` options (kudos @alyyousuf7)
