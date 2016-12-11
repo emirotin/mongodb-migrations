@@ -24,9 +24,9 @@ It's important to do to ensure the migrtions collection is in valid state which 
 ## 0.8.0
 
 * _fix regression_: allow configs with `url` option
-* **[breaking change]** Skipped migrations are now also recorded in the DB as being ran (and removed on rollback, see below).
+* **[_potentially_ breaking change]** Skipped migrations are now also recorded in the DB as being ran (and removed on rollback, see below).
 * **[_potentially_ breaking change]** Fix the erroneous `rollback` behaviour where it was creating another record for the migration
-instead of deleting the old one.
+(in the migrations collection) instead of deleting the existing one.
 
 ## 0.7.0
 
