@@ -1,3 +1,7 @@
+* **[breaking change]** Skipped migrations are now also recorded in the DB as being ran (and removed on rollback, see below).
+* **[_potentially_ breaking change]** Fix the erroneous `rollback` behaviour where it was creating another record for the migration
+instead of deleting the old one.
+
 ## 0.7.0
 
 * Validate config object when creating the migrator instance
