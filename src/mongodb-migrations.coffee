@@ -7,6 +7,8 @@ mongoConnect = require('./utils').connect
 repeatString = require('./utils').repeatString
 migrationStub = require('./migration-stub')
 
+DEFAULT_COLLECTION = '_migrations'
+
 defaultLog = (src, args...) ->
   pad = repeatString(' ', if src is 'system' then 4 else 2)
   console.log(pad, args...)
@@ -22,7 +24,7 @@ class Migrator
     .then (db) =>
       @_db = db
 
-    @_collName = dbConfig.collection
+    @_collName = dbConfig.collection or DEFAULT_COLLECTION
     @_timeout = dbConfig.timeout
 
     if logFn or logFn is null
