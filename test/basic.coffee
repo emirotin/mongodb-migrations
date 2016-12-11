@@ -18,22 +18,6 @@ describe 'Migrator', ->
     db.should.be.ok()
     done()
 
-  it 'should set default migrations collection', (done) ->
-    config1 =
-      host: 'localhost'
-      port: 27017
-      db: '_mm'
-    m1 = new mm.Migrator config1, null
-    m1._collName.should.be.equal('_migrations')
-    config2 =
-      host: 'localhost'
-      port: 27017
-      db: '_mm'
-      collection: '_custom'
-    m2 = new mm.Migrator config2, null
-    m2._collName.should.be.equal('_custom')
-    done()
-
   it 'should run migrations and return result', (done) ->
     migrator.add
       id: '1'
