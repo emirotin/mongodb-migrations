@@ -8,12 +8,14 @@ module.exports = (grunt) ->
         src: ['**/*.coffee']
         dest: 'lib'
         ext: '.js'
+        options: header: true
       bin:
         expand: true
         cwd: 'bin-src'
         src: ['**/*.coffee']
         dest: 'bin'
         ext: '.js'
+        options: header: true
 
     concat:
       options:
