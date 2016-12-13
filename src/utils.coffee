@@ -1,6 +1,9 @@
+_ = require('lodash')
+fs = require 'fs'
+path = require 'path'
+mkdirp = require 'mkdirp'
 { MongoClient } = require('mongodb')
 urlBuilder = require('./url-builder')
-_ = require('lodash')
 
 DEFAULT_POOL_SIZE = 5
 DEFAULT_COLLECTION = '_migrations'
@@ -29,6 +32,7 @@ exports._buildOptions = _buildOptions = (config) ->
 
 validateConnSettings = (config) ->
   return if config.url
+
   { replicaset } = config
   if not replicaset
     if not config.host
@@ -72,3 +76,35 @@ exports.connect = (config, cb) ->
 
 exports.repeatString = (str, n) ->
   Array(n + 1).join(str)
+
+exports.loadMigrationsFromDir = (dir, cb) ->
+  mkdirp dir, 0o0774, (err) ->
+    return cb err if err
+    fs.readdir dir, (err, files) ->
+      return cb err if err
+      files = files
+        .filter (f) ->
+          path.extname(f) in ['.js', '.coffee'] and not f.startsWith('.')
+        .map (f) ->
+          n = f.match(/^(\d+)/)?[1]
+          if n
+            n = _.parseInt(n)
+          else
+            n = null
+          return { number: n, name: f }
+        .filter (f) -> !!f.name
+        .sort (f1, f2) -> f1.number - f2.number
+        .map (f) ->
+          fileName = path.join dir, f.name
+          if fileName.match /\.coffee$/
+            require('coffee-script/register')
+          module = require(fileName)
+          return { number: f.number, fullName: f.name, id: module.id, module }
+      cb null, files
+
+exports.slugify = (s) ->
+  (s or '').toLowerCase().replace /\s+/, '-'
+
+exports.writeFile = (dir, name, body, cb) ->
+  fileName = path.join(dir, name)
+  fs.writeFile fileName, body, cb
