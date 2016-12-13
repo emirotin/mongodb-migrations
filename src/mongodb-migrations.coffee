@@ -41,7 +41,7 @@ class Migrator
     @_migrateResult = null
 
     migrations = @_m.reverse()
-      .filter (m) -> (status = result[m.id]?.status) and status != 'skip'
+      .filter (m) -> (status = result[m.id]?.status) and status isnt 'skip'
 
     @_runner.runDown migrations, done, progress
     return

@@ -1,4 +1,5 @@
-{ _buildOptions, normalizeConfig } = require '../src/utils'
+path = require 'path'
+{ _buildOptions, normalizeConfig, loadSpecificMigrationsFromDir } = require '../src/utils'
 
 describe 'Utils', ->
 
@@ -162,3 +163,39 @@ describe 'Utils', ->
                 authDatabase: 'admin'
             }).should.throw('`authDatabase` provided but `user` is not')
             done()
+
+    describe 'loadSpecificMigrationsFromDir', ->
+      dir = path.join __dirname, 'migrations'
+
+      it 'should find existing migrations by number', (done) ->
+        loadSpecificMigrationsFromDir dir, [ '1' ], (err, migrations) ->
+          (!err).should.be.ok()
+          (migrations).should.be.ok()
+          migrations.length.should.be.equal(1)
+          migrations[0].id.should.be.equal('test1')
+          done()
+
+      it 'should find existing migrations by id', (done) ->
+        loadSpecificMigrationsFromDir dir, [ 'test1' ], (err, migrations) ->
+          (!err).should.be.ok()
+          (migrations).should.be.ok()
+          migrations.length.should.be.equal(1)
+          migrations[0].id.should.be.equal('test1')
+          done()
+
+      it 'should find existing migrations by full file name', (done) ->
+        loadSpecificMigrationsFromDir dir, [ '1-test1.js' ], (err, migrations) ->
+          (!err).should.be.ok()
+          (migrations).should.be.ok()
+          migrations.length.should.be.equal(1)
+          migrations[0].id.should.be.equal('test1')
+          done()
+
+      it 'should find several migrations and keep the order', (done) ->
+        loadSpecificMigrationsFromDir dir, [ '3', 'test1' ], (err, migrations) ->
+          (!err).should.be.ok()
+          (migrations).should.be.ok()
+          migrations.length.should.be.equal(2)
+          migrations[0].id.should.be.equal('test3')
+          migrations[1].id.should.be.equal('test1')
+          done()

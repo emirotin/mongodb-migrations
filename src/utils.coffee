@@ -77,11 +77,11 @@ exports.connect = (config, cb) ->
 exports.repeatString = (str, n) ->
   Array(n + 1).join(str)
 
-exports.loadMigrationsFromDir = (dir, cb) ->
+exports.loadMigrationsFromDir = loadMigrationsFromDir = (dir, cb) ->
   mkdirp dir, 0o0774, (err) ->
-    return cb err if err
+    return cb(err) if err
     fs.readdir dir, (err, files) ->
-      return cb err if err
+      return cb(err) if err
       files = files
         .filter (f) ->
           path.extname(f) in ['.js', '.coffee'] and not f.startsWith('.')
@@ -108,3 +108,19 @@ exports.slugify = (s) ->
 exports.writeFile = (dir, name, body, cb) ->
   fileName = path.join(dir, name)
   fs.writeFile fileName, body, cb
+
+exports.loadSpecificMigrationsFromDir = (dir, migrationIds, cb) ->
+  loadMigrationsFromDir dir, (err, migrations) ->
+    return cb(err) if err
+    # todo: reimplement this properly with promises
+    results = []
+    for migrationId in migrationIds
+      migration = null
+      if migrationId.match(/^\d+$/)
+        migration = _.find migrations, { number: _.parseInt(migrationId) }  
+      migration ?= _.find migrations, { fullName: migrationId }
+      migration ?= _.find migrations, { id: migrationId }
+      if not migration?
+        return cb new Error("Can't find the migration #{migrationId}")
+      results.push(migration.module)
+    cb null, results
