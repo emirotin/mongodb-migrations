@@ -1,6 +1,6 @@
 Promise = require 'bluebird'
 _ = require 'lodash'
-{ connect: mongoConnect, normalizeConfig } = require('./utils')
+{ connect: mongoConnect, normalizeConfig, loadSpecificMigrationsFromDir, loadMigrationsFromDir } = require('./utils')
 
 class MigrationsRunner
   constructor: (dbConfig, @log = _.noop) ->
@@ -129,10 +129,35 @@ class MigrationsRunner
     runOne()
 
   runUp: (migrations, done, progress) ->
-    @_runWhenReady migrations, 'up', done, progress
+    @_runWhenReady(migrations, 'up', done, progress)
 
   runDown: (migrations, done, progress) ->
-    @_runWhenReady migrations, 'down', done, progress
+    @_runWhenReady(migrations, 'down', done, progress)
+
+  _runFromDir: (dir, direction, done, progress) ->
+    loadMigrationsFromDir dir, (err, migrations) =>
+      return done(err) if err
+      migrations = _.map(migrations, 'module')
+      if direction is 'down'
+        migrations = migrations.reverse()
+      @_runWhenReady(migrations, direction, done, progress)
+
+  runUpFromDir: (dir, done, progress) ->
+    @_runFromDir(dir, 'up', done, progress)
+
+  runDownFromDir: (dir, done, progress) ->
+    @_runFromDir(dir, 'down', done, progress)
+
+  _runSpecificFromDir: (dir, migrationIds, direction, done, progress) ->
+    loadSpecificMigrationsFromDir dir, migrationIds, (err, migrations) =>
+      return done(err) if err
+      @_runWhenReady(migrations, direction, done, progress)
+
+  runSpecificUpFromDir: (dir, migrationIds, done, progress) ->
+    @_runSpecificFromDir(dir, migrationIds, 'up', done, progress)
+
+  runSpecificDownFromDir: (dir, migrationIds, done, progress) ->
+    @_runSpecificFromDir(dir, migrationIds, 'down', done, progress)
 
   dispose: (cb) ->
     @_isDisposed = true
