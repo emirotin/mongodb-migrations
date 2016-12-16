@@ -84,6 +84,20 @@ describe 'Utils', ->
             normalizeConfig.should.throw('`config` is not provided or is not an object')
             done()
 
+        it 'should allow config with proper url', (done) ->
+          config =
+            url: 'mongodb://aaa.bb.ccc:27101/some-db?ssl=true'
+
+          normalizeConfig(config).should.be.deepEqual(config)
+          done()
+
+        it 'should set default collection', (done) ->
+          config =
+            url: 'mongodb://aaa.bb.ccc:27101/some-db?ssl=true'
+
+          normalizeConfig(config).collection.should.be.equal('_migrations')
+          done()
+
         it 'should throw with wrong replicaset 1', (done) ->
             normalizeConfig.bind(null, {
                 replicaset: 7

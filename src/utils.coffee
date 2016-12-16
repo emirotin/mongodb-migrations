@@ -27,14 +27,8 @@ exports._buildOptions = _buildOptions = (config) ->
 
   return options
 
-exports.normalizeConfig = (config) ->
-  if not (_.isObject(config) and not _.isArray(config))
-    throw new Error('`config` is not provided or is not an object')
-
-  _.defaults config,
-    collection: DEFAULT_COLLECTION
-
-
+validateConnSettings = (config) ->
+  return if config.url
   { replicaset } = config
   if not replicaset
     if not config.host
@@ -55,6 +49,15 @@ exports.normalizeConfig = (config) ->
 
   if config.password and not config.user
     throw new Error('`password` provided but `user` is not')
+
+exports.normalizeConfig = (config) ->
+  if not (_.isObject(config) and not _.isArray(config))
+    throw new Error('`config` is not provided or is not an object')
+
+  _.defaults config,
+    collection: DEFAULT_COLLECTION
+
+  validateConnSettings(config)
 
   return config
 
