@@ -69,3 +69,4 @@ class Migrator
     @_runner.dispose(cb)
 
 module.exports.Migrator = Migrator
+module.exports.MigrationsRunner = MigrationsRunner
