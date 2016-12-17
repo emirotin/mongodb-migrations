@@ -73,7 +73,8 @@ from the current directory (include it as your project's dependency).
 
 The configuration object can have the following keys:
 
-* `host` — MongoDB host (_optional_ when using _replicaset_, **required** otherwise),
+* `url` — full MongoDB connection url (_optional_, when used the rest of the connection params (`host`, `port`, `db`, `user`, `password`, `replicaset`) are ignored),
+* `host` — MongoDB host (_optional_ when using `url` or `replicaset`, **required** otherwise),
 * `port` _[optional]_ — MongoDB port,
 * `db` — MongoDB database name,
 * `ssl` _[optional]_ - boolean, if `true`, `'?ssl=true'` is added to the MongoDB URL,

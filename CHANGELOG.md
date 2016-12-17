@@ -1,3 +1,7 @@
+## 0.8.1
+
+* update README
+
 ## 0.8.0
 
 * _fix regression_: allow configs with `url` option

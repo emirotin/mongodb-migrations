@@ -8,11 +8,11 @@ buildHost = (opts) ->
 
 module.exports =
   buildMongoConnString: (config) ->
-    hasUser = !!config.user
-    { replicaset } = config
-
     if config.url
       return config.url
+
+    hasUser = !!config.user
+    { replicaset } = config
 
     s = "mongodb://"
 
