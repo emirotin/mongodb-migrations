@@ -1,3 +1,5 @@
+## 0.8.2
+
 * Added a new machine-friendly `code` to the result in case of skipped migrations
 * fix the regression when the migrations would be recorded multiple times 
 
