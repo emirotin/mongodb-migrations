@@ -311,8 +311,8 @@ The values are `result` objects having the following properties:
 `"no migration function for direction up"`,
 `"no migration function for direction down"`,
 `"migration already ran"`,
-`"migration wasn't in the recent migrate run"`.
-See [Rollback](#migratorrollback) for the explanation of the last case.
+`"migration wasn't in the recent migrate run"`, See [Rollback](#migratorrollback) for the explanation of the last case,
+* `code` — a more machine-friendly version of `reason`, can be `"no_up"`, `"no_down"`, `"already_ran"`, `"not_in_recent_migrate"`.
 
 The optional `progressFn` function is called once per each migration
 and has the signature
