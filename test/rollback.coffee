@@ -16,16 +16,20 @@ describe 'Migrator Rollback', ->
 
   it 'should cleanup the migrations collection properly', (done) ->
     dir = path.join __dirname, 'migrations'
+    migrationsCol = db.collection '_migrations'
+
     migrator.runFromDir dir, (err, res) ->
       return done(err) if err
-      migrator.rollback (err, res) ->
+      migrationsCol.find().count (err, count) ->
         return done(err) if err
-        coll.find().count (err, count) ->
+        count.should.be.equal 3
+        migrator.rollback (err, res) ->
           return done(err) if err
-          count.should.be.equal 0
-
-          migrationsCol = db.collection '_migrations'
-          migrationsCol.find().count (err, count) ->
+          coll.find().count (err, count) ->
             return done(err) if err
             count.should.be.equal 0
-            done()
+
+            migrationsCol.find().count (err, count) ->
+              return done(err) if err
+              count.should.be.equal 0
+              done()
