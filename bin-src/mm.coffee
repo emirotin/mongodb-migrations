@@ -4,10 +4,13 @@ fs = require('fs')
 path = require('path')
 optparser = require('nomnom')
 _ = require('lodash')
-debug = !!process.env.DEBUG
+Promise = require('bluebird')
 
 mm = require('..')
+{ connect } = require('../lib/utils')
 Migrator = mm.Migrator
+
+debug = !!process.env.DEBUG
 
 defaults =
   directory: "migrations"
@@ -63,6 +66,39 @@ exit = (msg, err) ->
     process.exit 1
   process.exit 0
 
+dedupe = (opts) ->
+  readConfig opts.config
+  Promise.fromCallback (cb) ->
+    connect config, cb
+  .then (db) ->
+    return db.collection(config.collection)
+  .then (coll) ->
+    console.log('Loading the list of migration records...')
+    coll.find({}).toArray()
+    .then (docs) ->
+      console.log("Found total of #{docs.length} records. Detecting uniques")
+      knownIds = {}
+      mongoIdsToRemove = []
+      uniqueIds = 0
+      docs.forEach (d) ->
+        if knownIds[d.id]
+          mongoIdsToRemove.push(d._id)
+        else
+          knownIds[d.id] = true
+          uniqueIds += 1
+      console.log("Found #{uniqueIds} unique records. #{mongoIdsToRemove.length} to remove")
+      if debug
+        console.log(mongoIdsToRemove)
+
+      return mongoIdsToRemove
+    .then (mongoIdsToRemove) ->
+      coll.deleteMany(_id: $in: mongoIdsToRemove)
+  .then ->
+    console.log('Done')
+    exit()
+  .catch (err) ->
+    exit err.message, err
+
 optparser
   .script 'mm'
   .option 'config',
@@ -87,5 +123,10 @@ optparser
     flag: true
     help: 'Generate migration stub in CoffeeScript'
   .callback createMigration
+
+optparser
+  .command 'dedupe'
+  .help 'Remove duplicate entries from the migrations collection. Fixes the regression introduced by 0.8.0 and fixed in 0.8.2.'
+  .callback dedupe
 
 optparser.parse()
