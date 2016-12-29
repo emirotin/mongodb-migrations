@@ -90,7 +90,7 @@ class Migrator
           migrationsCollection.insert { id }, cb
       else
         Promise.fromCallback (cb) ->
-          migrationsCollection.deleteOne { id }, cb
+          migrationsCollection.deleteMany { id }, cb
 
       migrationsCollectionUpdatePromises.push(p)
 
@@ -109,26 +109,30 @@ class Migrator
         _.defer ->
           progress?(migration.id, res)
         msg = "Migration '#{migration.id}': #{res.status}"
-        if res.status == 'skip'
+        if res.status is 'skip'
           msg += " (#{res.reason})"
         systemLog msg
-        if res.status == 'error'
+        if res.status is 'error'
           systemLog '  ' + res.error
-        if res.status in [ 'ok', 'skip' ]
+        if res.status is 'ok' or (res.status is 'skip' and res.code in ['no_up', 'no_down'])
           handleMigrationDone(migration.id)
 
       fn = migration[direction]
       id = migration.id
 
       skipReason = null
+      skipCode = null
       if not fn
         skipReason = "no migration function for direction #{direction}"
+        skipCode = "no_#{direction}"
       if direction == 'up' and id of @_ranMigrations
         skipReason = "migration already ran"
+        skipCode = 'already_ran'
       if direction == 'down' and id not of @_result
         skipReason = "migration wasn't in the recent `migrate` run"
+        skipCode = 'not_in_recent_migrate'
       if skipReason
-        migrationDone status: 'skip', reason: skipReason
+        migrationDone status: 'skip', reason: skipReason, code: skipCode
         return runOne()
 
       isCallbackCalled = false

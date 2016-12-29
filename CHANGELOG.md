@@ -1,3 +1,6 @@
+
+* fix the regression when the migrations would be recorded multiple times 
+
 ## 0.8.1
 
 * update README
