@@ -1,3 +1,5 @@
+## 0.8.3
+
 * The new `dedupe` command. Run it once (`mm dedupe` with optional `--config` parameter as usual)
 to remove the duplicate migration records introduced by 0.8.0.
 It's important to do to ensure the migrtions collection is in valid state which is required to run the migrations down.
