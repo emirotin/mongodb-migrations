@@ -50,6 +50,9 @@ validateConnSettings = (config) ->
   if config.password and not config.user
     throw new Error('`password` provided but `user` is not')
 
+  if config.authDatabase and not config.user
+    throw new Error('`authDatabase` provided but `user` is not')
+
 exports.normalizeConfig = (config) ->
   if not (_.isObject(config) and not _.isArray(config))
     throw new Error('`config` is not provided or is not an object')

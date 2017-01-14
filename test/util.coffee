@@ -154,3 +154,11 @@ describe 'Utils', ->
                 password: 'very secret password'
             }).should.throw('`password` provided but `user` is not')
             done()
+
+        it 'should throw with authDatabase but without username', (done) ->
+            normalizeConfig.bind(null, {
+                host: 'localhost',
+                db: '_mm',
+                authDatabase: 'admin'
+            }).should.throw('`authDatabase` provided but `user` is not')
+            done()

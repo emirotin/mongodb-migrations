@@ -73,13 +73,14 @@ from the current directory (include it as your project's dependency).
 
 The configuration object can have the following keys:
 
-* `url` — full MongoDB connection url (_optional_, when used the rest of the connection params (`host`, `port`, `db`, `user`, `password`, `replicaset`) are ignored),
+* `url` — full MongoDB connection url (_optional_, when used the rest of the connection params (`host`, `port`, `db`, `user`, `password`, `replicaset`, `authDatabase`) are ignored),
 * `host` — MongoDB host (_optional_ when using `url` or `replicaset`, **required** otherwise),
 * `port` _[optional]_ — MongoDB port,
 * `db` — MongoDB database name,
 * `ssl` _[optional]_ - boolean, if `true`, `'?ssl=true'` is added to the MongoDB URL,
 * `user` _[optional]_ — MongoDB user name when authentication is required,
 * `password` _[optional]_ — MongoDB password when authentication is required,
+* `authDatabase` _[optional]_ - MongoDB database to authenticate the user against,    
 * `collection` _[optional]_ — The name of the MongoDB collection to track already ran migrations, **defaults to `_migrations`**,
 * `directory` — the directory (path relative to the current folder) to store migration files in and read them from, used when running from the command-line or when using `runFromDir`,
 * `timeout` _[optional]_ — time in milliseconds after which migration should fail if `done()` is not called (use 0 to disable timeout)

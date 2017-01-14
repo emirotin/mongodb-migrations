@@ -42,6 +42,22 @@ describe 'Url Builder', ->
       '/' + config.db + '?ssl=true'
     done()
 
+  it 'builds a single node url with an authDatabase', (done) ->
+    config =
+      user: 'someuser'
+      password: 'somepass'
+      host: 'abcde',
+      port: 27111
+      db: '_mm'
+      collection: '_migrations',
+      authDatabase: 'admin'
+
+    connString = urlBuilder.buildMongoConnString config
+    connString.should.be.equal 'mongodb://' + config.user + ':' +
+      config.password + '@' + config.host + ':' + config.port +
+      '/' + config.db + '?authSource=' + config.authDatabase
+    done()
+
   it 'builds a replicaset url with two replicas', (done) ->
     config =
       user: 'someuser'
