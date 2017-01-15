@@ -352,6 +352,7 @@ The files must conform to the following rules:
 1. be CommonJS modules and export `id`, `up` _[optional]_,
 and `down` _[optional]_ — see [Creating Migrations](#creating-migrations)
 for explanation,
+1. have filenames ending in `.js` or `.coffee`;
 1. if the migration file has `.coffee` extension, the
 `coffee-script >= 1.7.0` package must be importable
 from the current directory.

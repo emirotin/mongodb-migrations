@@ -176,6 +176,8 @@ class Migrator
         if err
           return cb err
         files = files
+          .filter (f) ->
+            path.extname(f) in ['.js', '.coffee'] && !f.startsWith('.')
           .map (f) ->
             n = f.match(/^(\d+)/)?[1]
             if n

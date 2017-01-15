@@ -28,7 +28,7 @@ describe 'Migrator from Directory', ->
 
           coll.find({ok: 1}).count (err, count) ->
             return done(err) if err
-            count.should.be.equal 2
+            count.should.be.equal 3
 
             migrator.rollback (err, res) ->
               return done(err) if err
