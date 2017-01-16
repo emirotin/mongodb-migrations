@@ -40,10 +40,13 @@ module.exports =
     params = []
 
     if replicaset
-      params.push 'replicaSet=' + replicaset.name
+      params.push "replicaSet=#{replicaset.name}"
 
     if config.ssl
       params.push 'ssl=true'
+
+    if config.authDatabase
+      params.push "authSource=#{config.authDatabase}"
 
     if params.length > 0
       s += '?' + params.join('&')

@@ -1,3 +1,7 @@
+## 0.8.5
+
+* Added support for setting authentication database via the `authSource` string.
+
 ## 0.8.4
 
 * Migration files other than `.js` and `.coffee` **will be skipped**, along with dotfiles
