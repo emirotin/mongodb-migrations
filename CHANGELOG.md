@@ -1,3 +1,5 @@
+* Migration files other than `.js` and `.coffee` **will be skipped**, along with dotfiles
+
 ## 0.8.3
 
 * The new `dedupe` command. Run it once (`mm dedupe` with optional `--config` parameter as usual)

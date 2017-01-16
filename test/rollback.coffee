@@ -22,7 +22,7 @@ describe 'Migrator Rollback', ->
       return done(err) if err
       migrationsCol.find().count (err, count) ->
         return done(err) if err
-        count.should.be.equal 3
+        count.should.be.equal 4
         migrator.rollback (err, res) ->
           return done(err) if err
           coll.find().count (err, count) ->
