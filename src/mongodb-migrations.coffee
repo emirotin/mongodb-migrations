@@ -145,7 +145,10 @@ class Migrator
         , @_timeout
 
       context = { db: @_db, log: userLog }
-      fn.call context, (err) ->
+
+      checkCallDone = false
+      resultFn = fn.call context, (err) ->
+        checkCallDone = true
         return if isCallbackCalled
         clearTimeout timeoutId
 
@@ -155,6 +158,18 @@ class Migrator
         else
           migrationDone status: 'ok'
           runOne()
+
+      if checkCallDone
+        return resultFn
+      else
+        console.log(
+          '*****************************************' +
+          '\nmake sure you didn\'t forget to call a callback "done" in your "up" method ' +
+          '\n\nexample: ' +
+          '\nmigration.add({\n\tid: "1",\n\tup: function(REQUIRED_PARAM_DONE) {\n\t\t...\n\t\tREQUIRED_PARAM_DONE() - must be called' +
+          '\n\t}\n});' +
+          '\n*****************************************'
+        )
 
     runOne()
 
