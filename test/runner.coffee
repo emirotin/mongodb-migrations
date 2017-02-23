@@ -116,7 +116,7 @@ describe 'MigrationsRunner', ->
 
           coll.find({ok: 1}).count (err, count) ->
             return done(err) if err
-            count.should.be.equal 2
+            count.should.be.equal 3
             done()
 
   it 'should run migrations down from directory', (done) ->
@@ -158,7 +158,7 @@ describe 'MigrationsRunner', ->
       return done(err) if err
       runner.runSpecificDownFromDir dir, ['test3', '2-test2.js'], (err, res) ->
         return done(err) if err
-        coll.find({}).sort(name: 1).toArray (err, docs) ->
+        coll.find(name: $in: ['tobi', 'loki']).sort(name: 1).toArray (err, docs) ->
           return done(err) if err
           (!!docs).should.be.ok()
           docs.length.should.be.equal(2)
