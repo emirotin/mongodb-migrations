@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-* **Feature:** CLI commands to run one or more arbitrary migrations up or down 
+* **Feature:** CLI commands to run one or more arbitrary migrations up or down (and the corresponding migrator methods)
 * Refactoring: migrations runner code is separarted from the stateful migrator (intended for programmatic usage)
 
 ## 0.8.5

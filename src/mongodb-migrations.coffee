@@ -33,6 +33,17 @@ class Migrator
     @_runner.runUp @_m, _done, progress
     return
 
+  runUp: (done, progress) ->
+    @migrate(done, progress)
+
+  runDown: (done, progress) ->
+    @_migrateResult = null
+    _done = (err, result) =>
+      @_migrateResult = result
+      done(err, result)
+    @_runner.runDown @_m, _done, progress
+    return
+
   rollback: (done, progress) ->
     result = @_migrateResult
 

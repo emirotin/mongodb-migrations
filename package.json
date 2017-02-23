@@ -7,7 +7,8 @@
     "build": "grunt",
     "prepublish": "npm test && npm run build",
     "test": "mocha --compilers coffee:coffee-script/register -r should",
-    "dev": "grunt watch"
+    "dev": "grunt watch",
+    "toc": "doctoc README.md"
   },
   "bin": {
     "mm": "./bin/mm"
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "coffee-script": "~1.12.1",
+    "doctoc": "^1.2.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",

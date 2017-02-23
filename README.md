@@ -13,20 +13,21 @@
     - [Migration functions](#migration-functions)
   - [Sample migration file](#sample-migration-file)
   - [Running migrations](#running-migrations)
+  - [Debugging migrations](#debugging-migrations)
 - [Programmatic usage](#programmatic-usage)
   - [Creating `Migrator` object](#creating-migrator-object)
     - [Custom logging](#custom-logging)
   - [Adding migrations](#adding-migrations)
     - [`migrator.add`](#migratoradd)
     - [`migrator.bulkAdd`](#migratorbulkadd)
-  - [`migrator.migrate`](#migratormigrate)
+  - [`migrator.migrate` [alias: `migrator.runUp`]](#migratormigrate-alias-migratorrunup)
+- [`migrator.runDown`](#migratorrundown)
   - [`migrator.runFromDir`](#migratorrunfromdir)
   - [`migrator.rollback`](#migratorrollback)
   - [`migrator.create`](#migratorcreate)
   - [`migrator.dispose`](#migratordispose)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## Installation
 
@@ -280,7 +281,7 @@ migrator.bulkAdd(migrationDefsArray),
 where `migrationDefsArray` is an array of objects explained in
 [migrator.add](#migratoradd).
 
-### `migrator.migrate`
+### `migrator.migrate` [alias: `migrator.runUp`]
 
 Once you have one or more migrations added, run them with calling
 
@@ -338,6 +339,17 @@ pre-`migrate` state).
 
 Obviously, this will lead to unexpected results if you don't properly define the
 `down` methods where they are required.
+
+## `migrator.runDown`
+
+This will run the `down` side of the migrations. Use it to do the manual rollback to
+the previous version of the DB. The arguments are the same as for the `migrator.runUp`:
+
+```javascript
+migrator.runDown(doneFn, [progressFn]).
+```
+
+See the previous version for some extra details.
 
 ### `migrator.runFromDir`
 
