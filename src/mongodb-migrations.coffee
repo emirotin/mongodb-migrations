@@ -44,17 +44,25 @@ class Migrator
   _coll: ->
     @_db.collection(@_collName)
 
+  _collectRanMigrations: (cb) ->
+    @_ranMigrations = {}
+    @_coll().find().toArray (err, docs) =>
+      if err
+        cb err
+      else
+        for doc in docs
+          @_ranMigrations[doc.id] = true
+        cb null
+
   _runWhenReady: (direction, cb, progress) ->
     if @_isDisposed
       return cb new Error 'This migrator is disposed and cannot be used anymore'
     onSuccess = =>
-      @_ranMigrations = {}
-      @_coll().find().toArray (err, docs) =>
+      @_collectRanMigrations (err) =>
         if err
-          return cb err
-        for doc in docs
-          @_ranMigrations[doc.id] = true
-        @_run direction, cb, progress
+          cb err
+        else
+          @_run direction, cb, progress
     onError = (err) ->
       cb err
     @_dbReady.then onSuccess, onError
@@ -188,7 +196,8 @@ class Migrator
           .filter (f) -> !!f.name
           .sort (f1, f2) -> f1.number - f2.number
           .map (f) ->
-            fileName = path.join dir, f.name
+            migrationsDir = path.resolve process.cwd(), dir
+            fileName = path.join migrationsDir, f.name
             if fileName.match /\.coffee$/
               require('coffee-script/register')
             return { number: f.number, module: require(fileName) }
@@ -200,6 +209,23 @@ class Migrator
         return done err
       @bulkAdd _.map(files, 'module')
       @migrate done, progress
+
+  isUpToDateFromDir: (dir, done) ->
+    @_loadMigrationFiles dir, (err, migrationFiles) =>
+      if err
+        done err
+      else
+        makeDiffWhenDbReady = =>
+          @_collectRanMigrations (err) =>
+            if err
+              done err
+            else
+              migrationFilesIds = _.map(migrationFiles, 'module.id')
+              ranMigrationsIds = _.keys(@_ranMigrations)
+              differenceCount = _.difference(migrationFilesIds, ranMigrationsIds)
+              done null, differenceCount.length == 0
+        @_dbReady.then makeDiffWhenDbReady, done
+
 
   create: (dir, id, done, coffeeScript=false) ->
     @_loadMigrationFiles dir, (err, files) ->
