@@ -116,7 +116,7 @@ class Migrator
           systemLog '  ' + res.error
         if res.status is 'ok' or (res.status is 'skip' and res.code in ['no_up', 'no_down'])
           handleMigrationDone(migration.id)
-
+ 
       fn = migration[direction]
       id = migration.id
 
@@ -135,26 +135,18 @@ class Migrator
         migrationDone status: 'skip', reason: skipReason, code: skipCode
         return runOne()
 
-      isCallbackCalled = false
-      if @_timeout
-        timeoutId = setTimeout () ->
-          isCallbackCalled = true
-          err = new Error "migration timed-out"
-          migrationDone status: 'error', error: err
-          allDone(err)
-        , @_timeout
-
-      context = { db: @_db, log: userLog }
-      fn.call context, (err) ->
-        return if isCallbackCalled
-        clearTimeout timeoutId
-
-        if err
-          migrationDone status: 'error', error: err
-          allDone(err)
-        else
-          migrationDone status: 'ok'
-          runOne()
+      fn = fn.bind { db: @_db, log: userLog }
+      p = if fn.length == 1 then Promise.fromCallback fn else Promise.resolve fn()
+      if @_timeout:
+        p = p.timeout(@_timeout, "migration timed-out")
+      recover = (err) ->
+        migrationDone status: 'error', error: err
+        allDone(err)
+      successful ->
+        migrationDone status: 'ok'
+        runOne()
+        
+      p.then recover, successful
 
     runOne()
 
