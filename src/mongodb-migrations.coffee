@@ -186,12 +186,13 @@ class Migrator
               n = null
             return  { number: n, name: f }
           .filter (f) -> !!f.name
-          .sort (f1, f2) -> f1.number - f2.number
           .map (f) ->
             fileName = path.join dir, f.name
             if fileName.match /\.coffee$/
               require('coffee-script/register')
             return { number: f.number, module: require(fileName) }
+          .filter (f) -> f.number? or f.module.id?
+          .sort (f1, f2) -> f1.number - f2.number
         cb null, files
 
   runFromDir: (dir, done, progress) ->
