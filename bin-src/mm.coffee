@@ -65,7 +65,7 @@ runSpecificUp = (opts) ->
 
 runDown = (opts) ->
   if opts.migrations
-    return runSpecificUp(opts)
+    return runSpecificDown(opts)
   createRunner(opts).runDownFromDir cwd(), exit
 
 runSpecificDown = (opts) ->
