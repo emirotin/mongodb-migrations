@@ -92,7 +92,7 @@
 
   runDown = function(opts) {
     if (opts.migrations) {
-      return runSpecificUp(opts);
+      return runSpecificDown(opts);
     }
     return createRunner(opts).runDownFromDir(cwd(), exit);
   };
