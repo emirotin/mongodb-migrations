@@ -57,7 +57,7 @@ File name can be passed through the means of `--config` parameter.
 The path is relative to the current directory:
 
 ```bash
-  mm --config=configs/mm.json
+  mm --config=configs/mm-config.json
 ```
 
 In case of `json` the file should contain valid JSON representation of the
@@ -88,17 +88,11 @@ The configuration object can have the following keys:
 * `options` _[optional]_ - arbitrary options passed to the MongoClient (_Note: if not set directly, `options.server.poolSize` defaults to `5`._),
 * `replicaset` _[optional]_ - if using replica sets should be an object of the following structure:
 ```
-name: 'rs-ds023680',
-members: [
-  {
-    host: 'bee.boo.bar',
-    port: 23680
-  }
-  {
-    host: 'choo.choo',
-    port: 24610
-  }
-]
+{
+  "db": "rs-ds023680",
+  "host": "localhost",
+  "port": 27017
+}
 ```
 
 ### Creating Migrations
@@ -425,3 +419,7 @@ The `cb` is a Node-style callback:
 ```javascript
 function cb(error).
 ```
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
