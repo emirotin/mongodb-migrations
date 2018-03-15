@@ -151,7 +151,7 @@ See [Custom logging](#custom-logging) for advanced usage.
 ### Sample migration file
 
 ```javascript
-exports.id = 'create-toby';
+exports.id = 'create-tobi';
 
 exports.up = function (done) {
   var coll = this.db.collection('test');
