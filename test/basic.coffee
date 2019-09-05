@@ -78,9 +78,19 @@ describe 'Migrator', ->
         return Promise.reject(new Error('error - promise rejected'))
 
     migrator.migrate (err, res) ->
-        return done(new Error 'migration should have failed') if not err
-        err.message.should.be.equal 'error - promise rejected'
-        done()
+      return done(new Error 'migration should have failed') if not err
+      err.message.should.be.equal 'error - promise rejected'
+      done()
+
+  it 'should timeout on promise-based migration and return error', (done) ->
+    migrator.add
+      id: '1'
+      up: () ->
+        return new Promise((resolve, reject) => setTimeout resolve, 300)
+    migrator.migrate (err) ->
+      return done(new Error 'migration should have failed') if not err
+      err.message.should.be.equal 'migration timed-out'
+      done()
 
   it 'should timeout migration and return error', (done) ->
     migrator.add
