@@ -172,7 +172,6 @@ class Migrator
         );
 
     runOne()
-    return
 
   migrate: (done, progress) ->
     @_runWhenReady 'up', done, progress
