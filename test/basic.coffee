@@ -49,6 +49,39 @@ describe 'Migrator', ->
         count.should.be.equal 1
         done()
 
+  it 'should run migrations that return resolved promise on error', (done) ->
+    migrator.add
+      id: '1'
+      up: () ->
+        return new Promise((resolve, reject) =>
+          coll.insert name: 'tobi', (err) ->
+            if err
+              reject(err)
+            else
+              resolve()
+        );
+
+    migrator.migrate (err, res) ->
+      return done(err) if err
+      res.should.be.ok()
+      res['1'].should.be.ok()
+      res['1'].status.should.be.equal 'ok'
+      coll.find({name: 'tobi'}).count (err, count) ->
+        return done(err) if err
+        count.should.be.equal 1
+        done()
+
+  it 'should run migrations and return rejected promise on error', (done) ->
+    migrator.add
+      id: '1'
+      up: () ->
+        return Promise.reject(new Error('error - promise rejected'))
+
+    migrator.migrate (err, res) ->
+        return done(new Error 'migration should have failed') if not err
+        err.message.should.be.equal 'error - promise rejected'
+        done()
+
   it 'should timeout migration and return error', (done) ->
     migrator.add
       id: '1'

@@ -97,6 +97,7 @@ class Migrator
     allDone = (err) =>
       Promise.all(migrationsCollectionUpdatePromises).then =>
         done err, @_result
+      return
 
     runOne = =>
       if i >= l
@@ -145,7 +146,8 @@ class Migrator
         , @_timeout
 
       context = { db: @_db, log: userLog }
-      fn.call context, (err) ->
+
+      donePromise = fn.call context, (err) ->
         return if isCallbackCalled
         clearTimeout timeoutId
 
@@ -156,7 +158,21 @@ class Migrator
           migrationDone status: 'ok'
           runOne()
 
+      if donePromise && donePromise.then instanceof Function
+        donePromise.then(() ->
+          return if isCallbackCalled
+          clearTimeout timeoutId
+          migrationDone status: 'ok'
+          runOne()
+        ).catch((err) ->
+          return if isCallbackCalled
+          clearTimeout timeoutId
+          migrationDone status: 'error', error: err
+          allDone(err)
+        );
+
     runOne()
+    return
 
   migrate: (done, progress) ->
     @_runWhenReady 'up', done, progress
