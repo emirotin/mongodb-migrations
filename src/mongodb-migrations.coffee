@@ -97,6 +97,10 @@ class Migrator
     allDone = (err) =>
       Promise.all(migrationsCollectionUpdatePromises).then =>
         done err, @_result
+      # This return is necessary to prevent the above promise from being returned,
+      # otherwise the promise will eventually be returned by the migration up/down function.
+      # That would interfere with promise-based migrations, so explicitly return nothing here.
+      return
 
     runOne = =>
       if i >= l
@@ -145,7 +149,8 @@ class Migrator
         , @_timeout
 
       context = { db: @_db, log: userLog }
-      fn.call context, (err) ->
+
+      donePromise = fn.call context, (err) ->
         return if isCallbackCalled
         clearTimeout timeoutId
 
@@ -155,6 +160,19 @@ class Migrator
         else
           migrationDone status: 'ok'
           runOne()
+
+      if donePromise && donePromise.then instanceof Function
+        donePromise.then(() ->
+          return if isCallbackCalled
+          clearTimeout timeoutId
+          migrationDone status: 'ok'
+          runOne()
+        ).catch((err) ->
+          return if isCallbackCalled
+          clearTimeout timeoutId
+          migrationDone status: 'error', error: err
+          allDone(err)
+        );
 
     runOne()
 
