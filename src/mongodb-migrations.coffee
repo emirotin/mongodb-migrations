@@ -97,6 +97,9 @@ class Migrator
     allDone = (err) =>
       Promise.all(migrationsCollectionUpdatePromises).then =>
         done err, @_result
+      # This return is necessary to prevent the above promise from being returned,
+      # otherwise the promise will eventually be returned by the migration up/down function.
+      # That would interfere with promise-based migrations, so explicitly return nothing here.
       return
 
     runOne = =>
