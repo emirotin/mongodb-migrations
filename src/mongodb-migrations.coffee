@@ -139,10 +139,18 @@ class Migrator
         migrationDone status: 'skip', reason: skipReason, code: skipCode
         return runOne()
 
-      isCallbackCalled = false
+      didTimeout = false
+      didReturnPromise = false
+      didExecuteCallback = false
+
+      promiseAndDoneError = () ->
+        err = new Error "Migration called done() AND returned a promise"
+        migrationDone status: 'error', error: err
+        allDone(err)
+
       if @_timeout
         timeoutId = setTimeout () ->
-          isCallbackCalled = true
+          didTimeout = true
           err = new Error "migration timed-out"
           migrationDone status: 'error', error: err
           allDone(err)
@@ -151,8 +159,14 @@ class Migrator
       context = { db: @_db, log: userLog }
 
       donePromise = fn.call context, (err) ->
-        return if isCallbackCalled
+        didExecuteCallback = true;
+
+        return if didTimeout
         clearTimeout timeoutId
+
+        if didReturnPromise
+          promiseAndDoneError()
+          return
 
         if err
           migrationDone status: 'error', error: err
@@ -162,13 +176,19 @@ class Migrator
           runOne()
 
       if donePromise && donePromise.then instanceof Function
+        didReturnPromise = true;
+
+        if didExecuteCallback
+          promiseAndDoneError()
+          return
+
         donePromise.then(() ->
-          return if isCallbackCalled
+          return if didTimeout
           clearTimeout timeoutId
           migrationDone status: 'ok'
           runOne()
         ).catch((err) ->
-          return if isCallbackCalled
+          return if didTimeout
           clearTimeout timeoutId
           migrationDone status: 'error', error: err
           allDone(err)
