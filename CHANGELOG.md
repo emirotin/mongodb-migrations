@@ -1,3 +1,10 @@
+=======
+## 0.8.5
+
+* Added support for setting authentication database via the `authSource` string.
+
+## 0.8.4
+
 * Migration files other than `.js` and `.coffee` **will be skipped**, along with dotfiles
 
 ## 0.8.3
@@ -9,7 +16,7 @@ It's important to do to ensure the migrtions collection is in valid state which 
 ## 0.8.2
 
 * Added a new machine-friendly `code` to the result in case of skipped migrations
-* fix the regression when the migrations would be recorded multiple times 
+* fix the regression when the migrations would be recorded multiple times
 
 ## 0.8.1
 

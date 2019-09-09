@@ -21,9 +21,8 @@ describe 'Url Builder', ->
       collection: '_migrations'
 
     connString = urlBuilder.buildMongoConnString config
-    connString.should.be.equal 'mongodb://' + config.user + ':' +
-      config.password + '@' + config.host + ':' + config.port +
-      '/' + config.db
+    connString.should.be.equal "mongodb://#{config.user}:#{config.password}@" +
+      "#{config.host}:#{config.port}/#{config.db}"
     done()
 
   it 'builds a single node url with ssl', (done) ->
@@ -37,9 +36,23 @@ describe 'Url Builder', ->
       ssl: true
 
     connString = urlBuilder.buildMongoConnString config
-    connString.should.be.equal 'mongodb://' + config.user + ':' +
-      config.password + '@' + config.host + ':' + config.port +
-      '/' + config.db + '?ssl=true'
+    connString.should.be.equal "mongodb://#{config.user}:#{config.password}@" +
+      "#{config.host}:#{config.port}/#{config.db}?ssl=true"
+    done()
+
+  it 'builds a single node url with an authDatabase', (done) ->
+    config =
+      user: 'someuser'
+      password: 'somepass'
+      host: 'abcde',
+      port: 27111
+      db: '_mm'
+      collection: '_migrations',
+      authDatabase: 'admin'
+
+    connString = urlBuilder.buildMongoConnString config
+    connString.should.be.equal "mongodb://#{config.user}:#{config.password}@" +
+      "#{config.host}:#{config.port}/#{config.db}?authSource=#{config.authDatabase}"
     done()
 
   it 'builds a replicaset url with two replicas', (done) ->
@@ -62,12 +75,10 @@ describe 'Url Builder', ->
       collection: '_migrations'
 
     connString = urlBuilder.buildMongoConnString config
-    connString.should.be.equal 'mongodb://' + config.user + ':' +
-      config.password + '@' +
-      config.replicaset.members[0].host + ':' + config.replicaset.members[0].port +
-      ',' +
-      config.replicaset.members[1].host + ':' + config.replicaset.members[1].port +
-      '/' + config.db + '?replicaSet=' + config.replicaset.name
+    connString.should.be.equal "mongodb://#{config.user}:#{config.password}@" +
+      "#{config.replicaset.members[0].host}:#{config.replicaset.members[0].port}," +
+      "#{config.replicaset.members[1].host}:#{config.replicaset.members[1].port}/" +
+      "#{config.db}?replicaSet=#{config.replicaset.name}"
     done()
 
   it 'builds a replicaset url with three replicas', (done) ->
@@ -94,12 +105,9 @@ describe 'Url Builder', ->
       collection: '_migrations'
 
     connString = urlBuilder.buildMongoConnString config
-    connString.should.be.equal 'mongodb://' + config.user + ':' +
-      config.password + '@' +
-      config.replicaset.members[0].host + ':' + config.replicaset.members[0].port +
-      ',' +
-      config.replicaset.members[1].host + ':' + config.replicaset.members[1].port +
-      ',' +
-      config.replicaset.members[2].host + ':' + config.replicaset.members[2].port +
-      '/' + config.db + '?replicaSet=' + config.replicaset.name
+    connString.should.be.equal "mongodb://#{config.user}:#{config.password}@" +
+      "#{config.replicaset.members[0].host}:#{config.replicaset.members[0].port}," +
+      "#{config.replicaset.members[1].host}:#{config.replicaset.members[1].port}," +
+      "#{config.replicaset.members[2].host}:#{config.replicaset.members[2].port}/" +
+      "#{config.db}?replicaSet=#{config.replicaset.name}"
     done()
