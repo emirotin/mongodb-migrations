@@ -107,8 +107,10 @@ describe 'Migrator', ->
       id: 1
       up: (cb) ->
         coll.insert name: 'tobi', cb
+        return
       down: (cb) ->
         coll.update { name: 'tobi' }, { name: 'loki' }, cb
+        return
     migrator.migrate (err, res) ->
       return done(err) if err
       migrator.rollback (err, res) ->
