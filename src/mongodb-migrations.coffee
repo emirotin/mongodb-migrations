@@ -157,7 +157,7 @@ class Migrator
           allDone(err)
         , @_timeout
 
-      context = { db: @_db, log: userLog }
+      context = { db: @_db, log: userLog, client: @_client }
 
       donePromise = fn.call context, (err) ->
         didExecuteCallback = true;
