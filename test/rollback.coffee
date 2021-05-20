@@ -11,7 +11,7 @@ describe 'Migrator Rollback', ->
     testsCommon.beforeEach (res) ->
       {migrator, db} = res
       coll = db.collection 'test'
-      coll.remove {}, ->
+      coll.deleteMany {}, ->
         done()
 
   it 'should cleanup the migrations collection properly', (done) ->

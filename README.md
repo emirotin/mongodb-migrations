@@ -80,7 +80,7 @@ The configuration object can have the following keys:
 * `ssl` _[optional]_ - boolean, if `true`, `'?ssl=true'` is added to the MongoDB URL,
 * `user` _[optional]_ — MongoDB user name when authentication is required,
 * `password` _[optional]_ — MongoDB password when authentication is required,
-* `authDatabase` _[optional]_ - MongoDB database to authenticate the user against,    
+* `authDatabase` _[optional]_ - MongoDB database to authenticate the user against,
 * `collection` _[optional]_ — The name of the MongoDB collection to track already ran migrations, **defaults to `_migrations`**,
 * `directory` — the directory (path relative to the current folder) to store migration files in and read them from, used when running from the command-line or when using `runFromDir`,
 * `timeout` _[optional]_ — time in milliseconds after which migration should fail if `done()` is not called (use 0 to disable timeout)
@@ -155,12 +155,12 @@ exports.id = 'create-toby';
 
 exports.up = function (done) {
   var coll = this.db.collection('test');
-  coll.insert({ name: 'tobi' }, done);
+  coll.insertOne({ name: 'tobi' }, done);
 };
 
 exports.down = function (done) {
   var coll = this.db.collection('test');
-  coll.remove({}, done);
+  coll.removeMany({}, done);
 };
 ```
 

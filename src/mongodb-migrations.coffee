@@ -88,7 +88,7 @@ class Migrator
     handleMigrationDone = (id) ->
       p = if direction == 'up'
         Promise.fromCallback (cb) ->
-          migrationsCollection.insert { id }, cb
+          migrationsCollection.insertOne { id }, cb
       else
         Promise.fromCallback (cb) ->
           migrationsCollection.deleteMany { id }, cb
