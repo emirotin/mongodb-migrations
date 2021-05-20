@@ -70,8 +70,8 @@ dedupe = (opts) ->
   readConfig opts.config
   Promise.fromCallback (cb) ->
     connect config, cb
-  .then (db) ->
-    return db.collection(config.collection)
+  .then (client) ->
+    return client.db().collection(config.collection)
   .then (coll) ->
     console.log('Loading the list of migration records...')
     coll.find({}).toArray()
