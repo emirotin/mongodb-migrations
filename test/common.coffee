@@ -2,7 +2,7 @@ mm = require '../src/mongodb-migrations'
 mongoConnect = require('../src/utils').connect
 
 config =
-  host: 'localhost'
+  host: process.env.DB_HOST || 'localhost'
   port: 27017
   db: '_mm'
   collection: '_migrations'
@@ -12,10 +12,11 @@ module.exports =
   config: config
 
   beforeEach: (done) ->
-    mongoConnect config, (err, db) ->
+    mongoConnect config, (err, client) ->
       if err
         console.error err
         throw err
-      db.collection(config.collection).remove {}, ->
+      db = client.db()
+      db.collection(config.collection).deleteMany {}, ->
         migrator = new mm.Migrator config, null
         done { migrator, db, config }

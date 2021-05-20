@@ -99,8 +99,8 @@
     readConfig(opts.config);
     return Promise.fromCallback(function(cb) {
       return connect(config, cb);
-    }).then(function(db) {
-      return db.collection(config.collection);
+    }).then(function(client) {
+      return client.db().collection(config.collection);
     }).then(function(coll) {
       console.log('Loading the list of migration records...');
       return coll.find({}).toArray().then(function(docs) {

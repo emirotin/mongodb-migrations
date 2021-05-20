@@ -22,8 +22,9 @@ class Migrator
 
     @_dbReady = new Promise.fromCallback (cb) ->
       mongoConnect dbConfig, cb
-    .then (db) =>
-      @_db = db
+    .then (client) =>
+      @_client = client
+      @_db = client.db()
 
     @_collName = dbConfig.collection
     @_timeout = dbConfig.timeout
@@ -87,7 +88,7 @@ class Migrator
     handleMigrationDone = (id) ->
       p = if direction == 'up'
         Promise.fromCallback (cb) ->
-          migrationsCollection.insert { id }, cb
+          migrationsCollection.insertOne { id }, cb
       else
         Promise.fromCallback (cb) ->
           migrationsCollection.deleteMany { id }, cb
@@ -255,7 +256,7 @@ class Migrator
     @_isDisposed = true
     onSuccess = =>
       try
-        @_db.close()
+        @_client.close()
         cb?(null)
       catch e
         cb?(e)

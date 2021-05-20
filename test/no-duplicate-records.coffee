@@ -12,14 +12,14 @@ describe 'Migrations Collection', ->
       {migrator, db, config} = res
       migrationColl = db.collection(config.collection)
       coll = db.collection 'test'
-      coll.remove {}, ->
+      coll.deleteMany {}, ->
         done()
 
   it 'should run migrations and only record them once', (done) ->
     migrator.add
       id: 'm1'
       up: (cb) ->
-        coll.insert name: 'tobi', cb
+        coll.insertOne name: 'tobi', cb
     migrator.migrate (err, res) ->
       return done(err) if err
       coll.find({name: 'tobi'}).count (err, count) ->

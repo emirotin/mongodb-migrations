@@ -11,7 +11,7 @@ describe 'Migrator from Directory', ->
     testsCommon.beforeEach (res) ->
       {migrator, db} = res
       coll = db.collection 'test'
-      coll.remove {}, ->
+      coll.deleteMany {}, ->
         done()
 
   it 'should run migrations from directory', (done) ->

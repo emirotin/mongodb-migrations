@@ -10,7 +10,7 @@ describe 'Migrator', ->
     testsCommon.beforeEach (res) ->
       {migrator, db} = res
       coll = db.collection 'test'
-      coll.remove {}, ->
+      coll.deleteMany {}, ->
         done()
 
   it 'should exist', (done) ->
@@ -38,7 +38,7 @@ describe 'Migrator', ->
     migrator.add
       id: '1'
       up: (cb) ->
-        coll.insert name: 'tobi', cb
+        coll.insertOne name: 'tobi', cb
     migrator.migrate (err, res) ->
       return done(err) if err
       res.should.be.ok()
@@ -54,7 +54,7 @@ describe 'Migrator', ->
       id: '1'
       up: () ->
         return new Promise((resolve, reject) =>
-          coll.insert name: 'tobi', (err) ->
+          coll.insertOne name: 'tobi', (err) ->
             if err
               reject(err)
             else
@@ -106,10 +106,10 @@ describe 'Migrator', ->
     migrator.add
       id: 1
       up: (cb) ->
-        coll.insert name: 'tobi', cb
+        coll.insertOne name: 'tobi', cb
         return
       down: (cb) ->
-        coll.update { name: 'tobi' }, { name: 'loki' }, cb
+        coll.updateOne { name: 'tobi' }, { $set: { name: 'loki' } }, cb
         return
     migrator.migrate (err, res) ->
       return done(err) if err
@@ -127,9 +127,9 @@ describe 'Migrator', ->
     migrator.add
       id: 1
       up: (cb) ->
-        coll.insert name: 'tobi', cb
+        coll.insertOne name: 'tobi', cb
       down: (cb) ->
-        coll.update { name: 'tobi' }, { name: 'loki' }, cb
+        coll.updateOne { name: 'tobi' }, { $set: { name: 'loki' } }, cb
     migrator.migrate (err, res) ->
       return done(err) if err
       res['1'].should.be.ok()

@@ -10,7 +10,7 @@ describe 'Migrator Errors Handling', ->
     testsCommon.beforeEach (res) ->
       {migrator, db} = res
       coll = db.collection 'test'
-      coll.remove {}, ->
+      coll.deleteMany {}, ->
         done()
 
   it 'should run migrations and stop on the first error', (done) ->
