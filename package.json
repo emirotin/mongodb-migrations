@@ -4,7 +4,6 @@
   "description": "A migration framework for MongoDB",
   "main": "lib/mongodb-migrations.js",
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "build": "grunt",
     "prepublish": "npm test && npm run build",
     "test": "mocha --compilers coffee:coffeescript/register -r should",
@@ -48,8 +47,5 @@
     "mocha": "^3.2.0",
     "rimraf": "^2.5.3",
     "should": "^11.1.2"
-  },
-  "resolutions": {
-    "underscore": "^1.13.1"
   }
 }
