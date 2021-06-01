@@ -36,7 +36,7 @@ readConfig = (fileName) ->
   try
     fileName = path.join dir, fileName
     if fileName.match /\.coffee$/
-      require('coffee-script/register')
+      require('coffeescript/register')
     config = _.assign {}, defaults, require(fileName)
   catch e
     exit fileName + " cannot be imported", e
@@ -105,7 +105,7 @@ optparser
     metavar: 'FILE'
     help: """
       The name of the file in the current directory, can be .js, or .json, or .coffee.
-      For .coffee, the `coffee-script` >= 1.7.0 package must be importable from the current directory.
+      For .coffee, the `coffeescript` >= 1.7.0 package must be importable from the current directory.
     """
 
 optparser

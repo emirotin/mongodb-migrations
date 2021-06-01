@@ -229,7 +229,7 @@ class Migrator
           .map (f) ->
             fileName = path.join dir, f.name
             if fileName.match /\.coffee$/
-              require('coffee-script/register')
+              require('coffeescript/register')
             return { number: f.number, module: require(fileName) }
         cb null, files
 
