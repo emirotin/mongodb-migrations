@@ -22,6 +22,7 @@ describe 'Migrations Builder', ->
         return done(err) if err
         fs.existsSync(path.join dir, '2-test2.js').should.be.ok()
         done()
+    return undefined
 
   it 'should create migration stubs for Coffee', (done) ->
 
@@ -30,3 +31,4 @@ describe 'Migrations Builder', ->
       fs.existsSync(path.join dir, '1-test1.coffee').should.be.ok()
       done()
     , true
+    return undefined

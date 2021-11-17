@@ -1,0 +1,10 @@
+services:
+  migrations:
+    image: node:14
+    command: [sleep, Infinity]
+    environment:
+      DB_HOST: mongo
+    volumes:
+      - .:/mongodb-migrations
+  mongo:
+    image: mongo

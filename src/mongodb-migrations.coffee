@@ -208,9 +208,7 @@ class Migrator
     return
 
   _loadMigrationFiles: (dir, cb) ->
-    mkdirp dir, 0o0774, (err) ->
-      if err
-        return cb err
+    mkdirp(dir, { mode: 0o0774 }).then((err) ->
       fs.readdir dir, (err, files) ->
         if err
           return cb err
@@ -232,6 +230,7 @@ class Migrator
               require('coffeescript/register')
             return { number: f.number, module: require(fileName) }
         cb null, files
+    , cb)
 
   runFromDir: (dir, done, progress) ->
     @_loadMigrationFiles dir, (err, files) =>
