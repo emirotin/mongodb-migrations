@@ -15,3 +15,4 @@ describe 'Migrator Dispose', ->
           (err?).should.be.ok()
           err.toString().should.match /disposed/
           done()
+    return undefined

@@ -36,3 +36,4 @@ describe 'Migrator from Directory', ->
                 return done(err) if err
                 count.should.be.equal 0
                 done()
+    return undefined

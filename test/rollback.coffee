@@ -17,7 +17,6 @@ describe 'Migrator Rollback', ->
   it 'should cleanup the migrations collection properly', (done) ->
     dir = path.join __dirname, 'migrations'
     migrationsCol = db.collection '_migrations'
-
     migrator.runFromDir dir, (err, res) ->
       return done(err) if err
       migrationsCol.find().count (err, count) ->
@@ -33,3 +32,4 @@ describe 'Migrator Rollback', ->
               return done(err) if err
               count.should.be.equal 0
               done()
+    return undefined
