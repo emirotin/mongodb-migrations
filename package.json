@@ -5,9 +5,9 @@
   "main": "lib/mongodb-migrations.js",
   "scripts": {
     "build": "coffee --compile --output lib src",
-    "prepublish": "npm test && npm run build",
+    "prepublish": "npm run build",
     "test": "mocha --compilers coffee:coffeescript/register -r should",
-    "dev": "grunt watch"
+    "dev": "coffee --watch --compile --output lib src"
   },
   "repository": {
     "type": "git",
