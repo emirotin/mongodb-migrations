@@ -30,7 +30,7 @@
     "bluebird": "^3.4.1",
     "lodash": "^4.13.0",
     "mkdirp": "^1.0.4",
-    "mongodb": "^3.6.6"
+    "mongodb": "^4.0.0"
   },
   "devDependencies": {
     "coffeescript": "^2.5.1",
